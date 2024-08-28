@@ -1,6 +1,5 @@
 Invoke-Expression -Command (Invoke-RestMethod -Uri functions.osdcloud.com)
 
-
 $Manufacturer = (Get-CimInstance -Class:Win32_ComputerSystem).Manufacturer
 $Model = (Get-CimInstance -Class:Win32_ComputerSystem).Model
 
@@ -76,6 +75,7 @@ $Global:MyOSDCloud = [ordered]@{
 
 #Used to Determine Driver Pack
 $DriverPack = Get-OSDCloudDriverPack -Product $Product -OSVersion $OSVersion -OSReleaseID $OSReleaseID
+write-host "DriverPack: $DriverPack"
 
 if ($DriverPack){
     $Global:MyOSDCloud.DriverPackName = $DriverPack.Name
@@ -84,6 +84,7 @@ if ($DriverPack){
 write-host "DriverPackName: $DriverPack.Name"
 
 #If Drivers are expanded on the USB Drive, disable installing a Driver Pack
+<#
 if (Test-DISMFromOSDCloudUSB -eq $true){
     Write-Host "Found Driver Pack Extracted on Cloud USB Flash Drive, disabling Driver Download via OSDCloud" -ForegroundColor Green
     if ($Global:MyOSDCloud.SyncMSUpCatDriverUSB -eq $true){
@@ -95,7 +96,7 @@ if (Test-DISMFromOSDCloudUSB -eq $true){
         $Global:MyOSDCloud.DriverPackName = "None"
     }
 }
-
+#>
 <#
 #Enable HPIA | Update HP BIOS | Update HP TPM
  
