@@ -3,46 +3,6 @@ Invoke-Expression -Command (Invoke-RestMethod -Uri functions.osdcloud.com)
 $Manufacturer = (Get-CimInstance -Class:Win32_ComputerSystem).Manufacturer
 $Model = (Get-CimInstance -Class:Win32_ComputerSystem).Model
 
-<#
-$HPTPM = $false
-$HPBIOS = $false
-$HPIADrivers = $false
-
-if ($Manufacturer -match "HP" -or $Manufacturer -match "Hewlett-Packard"){
-    $Manufacturer = "HP"
-    if ($InternetConnection){
-        $HPEnterprise = Test-HPIASupport
-    }
-}
-if ($HPEnterprise){
-    Invoke-Expression (Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/OSDeploy/OSD/master/cloud/modules/deviceshp.psm1')
-    osdcloud-InstallModuleHPCMSL
-    $TPM = osdcloud-HPTPMDetermine
-    $BIOS = osdcloud-HPBIOSDetermine
-    $HPIADrivers = $true
-    if ($TPM){
-    write-host "HP Update TPM Firmware: $TPM - Requires Interaction" -ForegroundColor Yellow
-        $HPTPM = $true
-    }
-    Else {
-        $HPTPM = $false
-    }
-
-    if ($BIOS -eq $false){
-        $CurrentVer = Get-HPBIOSVersion
-        write-host "HP System Firmware already Current: $CurrentVer" -ForegroundColor Green
-        $HPBIOS = $false
-    }
-    else
-        {
-        $LatestVer = (Get-HPBIOSUpdates -Latest).ver
-        $CurrentVer = Get-HPBIOSVersion
-        write-host "HP Update System Firmwware from $CurrentVer to $LatestVer" -ForegroundColor Yellow
-        $HPBIOS = $true
-    }
-}
-#>
-
 #Variables to define the Windows OS / Edition etc to be applied during OSDCloud
 $Product = (Get-MyComputerProduct)
 $Model = (Get-MyComputerModel)
@@ -73,51 +33,34 @@ $Global:MyOSDCloud = [ordered]@{
 #Testing MS Update Catalog Driver Sync
 #$Global:MyOSDCloud.DriverPackName = 'Microsoft Update Catalog'
 
-#Used to Determine Driver Pack
+<# 
+Used to Determine Driver Pack - OSDCloud will natively do this, so you don't have to, but..
+I want to control exactly how drivers are being done, what I'm doing here is..
+- Search for Driver Pack, if found, populate the driver pack variable information used in OSDCloud
+- Check to see if I have driver packs already downloaded and extracted into the DISM folder on the OSDCloudUSB
+  - If I do, Check if I'm wanting to Sync the MS Update Catalog drivers to the USB (Set above), because then I assume I want it to use the MS Catalog to suppliment my own drivers
+  - If I do want to sync, set the OSDCloud driver pack variables to use the Microsoft Update Catalog
+  - if I don't, set the driver pack to none, so it will ONLY use the drivers I have extracted into my DISM folder on the OSDCloudUSB
+#>
+#Region Determine if using native driver packs, or if I want to use extracted drivers on OSDCloudUSB
+$Product = (Get-MyComputerProduct)
 $DriverPack = Get-OSDCloudDriverPack -Product $Product -OSVersion $OSVersion -OSReleaseID $OSReleaseID
-write-host "DriverPack: $DriverPack"
 
 if ($DriverPack){
     $Global:MyOSDCloud.DriverPackName = $DriverPack.Name
 }
 
-write-host "DriverPackName: $DriverPack.Name"
-
 #If Drivers are expanded on the USB Drive, disable installing a Driver Pack
-<#
-if (Test-DISMFromOSDCloudUSB -eq $true){
+if ((Test-DISMFromOSDCloudUSB) -eq $true){
     Write-Host "Found Driver Pack Extracted on Cloud USB Flash Drive, disabling Driver Download via OSDCloud" -ForegroundColor Green
     if ($Global:MyOSDCloud.SyncMSUpCatDriverUSB -eq $true){
-        write-host "Setting DriverPackName to 'Microsoft Update Catalog'"
         $Global:MyOSDCloud.DriverPackName = 'Microsoft Update Catalog'
     }
     else {
-        write-host "Setting DriverPackName to 'None'"
         $Global:MyOSDCloud.DriverPackName = "None"
     }
 }
-#>
-<#
-#Enable HPIA | Update HP BIOS | Update HP TPM
- 
-if (Test-HPIASupport){
-    #$Global:MyOSDCloud.DevMode = [bool]$True
-    $Global:MyOSDCloud.HPTPMUpdate = [bool]$True
-    if ($Product -ne '83B2' -or $Model -notmatch "zbook"){$Global:MyOSDCloud.HPIAALL = [bool]$true} #I've had issues with this device and HPIA
-    #{$Global:MyOSDCloud.HPIAALL = [bool]$true}
-    $Global:MyOSDCloud.HPBIOSUpdate = [bool]$true
-    $Global:MyOSDCloud.HPCMSLDriverPackLatest = [bool]$true #In Test 
-    #Set HP BIOS Settings to what I want:
-    #iex (irm https://raw.githubusercontent.com/gwblok/garytown/master/OSD/CloudOSD/Manage-HPBiosSettings.ps1)
-    #Manage-HPBiosSettings -SetSettings
-}
-
-if ($Manufacturer -match "Lenovo") {
-    #Set Lenovo BIOS Settings to what I want:
-    #iex (irm https://raw.githubusercontent.com/gwblok/garytown/master/OSD/CloudOSD/Manage-LenovoBiosSettings.ps1)
-    #Manage-LenovoBIOSSettings -SetSettings
-}
-#>
+#endregion Driver Pack Stuff
 
 #write variables to console
 Write-Output $Global:MyOSDCloud
@@ -125,7 +68,14 @@ Write-Output $Global:MyOSDCloud
 #Launch OSDCloud
 Write-Host "Starting OSDCloud" -ForegroundColor Green
 write-host "Start-OSDCloud -OSName $OSName -OSEdition $OSEdition -OSActivation $OSActivation -OSLanguage $OSLanguage"
-Start-OSDCloud -OSName $OSName -OSEdition $OSEdition -OSActivation $OSActivation -OSLanguage $OSLanguage
+Start-OSDCloud -OSName $OSName -OSEdition $OSEdition -OSActivation $OSActivation -OSLanguage $OSLanguage 
 
-#Restart
+<#This is now native in OSDCloud
+write-host "OSDCloud Process Complete, Running Custom Actions Before Reboot" -ForegroundColor Green
+if (Test-DISMFromOSDCloudUSB){
+    Start-DISMFromOSDCloudUSB
+}
+#>
+
+#Restart Computer from WInPE into Full OS to continue Process
 restart-computer
