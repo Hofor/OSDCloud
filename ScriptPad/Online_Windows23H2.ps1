@@ -3,6 +3,8 @@ Invoke-Expression -Command (Invoke-RestMethod -Uri functions.osdcloud.com)
 
 $Manufacturer = (Get-CimInstance -Class:Win32_ComputerSystem).Manufacturer
 $Model = (Get-CimInstance -Class:Win32_ComputerSystem).Model
+
+<#
 $HPTPM = $false
 $HPBIOS = $false
 $HPIADrivers = $false
@@ -40,6 +42,7 @@ if ($HPEnterprise){
         $HPBIOS = $true
     }
 }
+#>
 
 #Variables to define the Windows OS / Edition etc to be applied during OSDCloud
 $Product = (Get-MyComputerProduct)
@@ -52,7 +55,6 @@ $OSEdition = 'Enterprise'
 $OSActivation = 'Volume'
 $OSLanguage = 'da-dk'
 
-
 #Set OSDCloud Vars
 $Global:MyOSDCloud = [ordered]@{
     Restart = [bool]$False
@@ -63,7 +65,7 @@ $Global:MyOSDCloud = [ordered]@{
     WindowsDefenderUpdate = [bool]$true
     SetTimeZone = [bool]$true
     ClearDiskConfirm = [bool]$False
-	NetFx3 = [bool]$True
+    NetFx3 = [bool]$True
     ShutdownSetupComplete = [bool]$false
     SyncMSUpCatDriverUSB = [bool]$true
     CheckSHA1 = [bool]$true
@@ -92,6 +94,8 @@ if (Test-DISMFromOSDCloudUSB -eq $true){
     }
 }
 #>
+
+<#
 #Enable HPIA | Update HP BIOS | Update HP TPM
  
 if (Test-HPIASupport){
@@ -111,6 +115,7 @@ if ($Manufacturer -match "Lenovo") {
     #iex (irm https://raw.githubusercontent.com/gwblok/garytown/master/OSD/CloudOSD/Manage-LenovoBiosSettings.ps1)
     #Manage-LenovoBIOSSettings -SetSettings
 }
+#>
 
 #write variables to console
 Write-Output $Global:MyOSDCloud
@@ -118,7 +123,6 @@ Write-Output $Global:MyOSDCloud
 #Launch OSDCloud
 Write-Host "Starting OSDCloud" -ForegroundColor Green
 write-host "Start-OSDCloud -OSName $OSName -OSEdition $OSEdition -OSActivation $OSActivation -OSLanguage $OSLanguage"
-
 Start-OSDCloud -OSName $OSName -OSEdition $OSEdition -OSActivation $OSActivation -OSLanguage $OSLanguage
 
 #Restart
