@@ -81,7 +81,9 @@ if ($DriverPack){
     $Global:MyOSDCloud.DriverPackName = $DriverPack.Name
 }
 
-<#If Drivers are expanded on the USB Drive, disable installing a Driver Pack
+write-host "DriverPackName: $DriverPack.Name"
+
+#If Drivers are expanded on the USB Drive, disable installing a Driver Pack
 if (Test-DISMFromOSDCloudUSB -eq $true){
     Write-Host "Found Driver Pack Extracted on Cloud USB Flash Drive, disabling Driver Download via OSDCloud" -ForegroundColor Green
     if ($Global:MyOSDCloud.SyncMSUpCatDriverUSB -eq $true){
@@ -93,7 +95,6 @@ if (Test-DISMFromOSDCloudUSB -eq $true){
         $Global:MyOSDCloud.DriverPackName = "None"
     }
 }
-#>
 
 <#
 #Enable HPIA | Update HP BIOS | Update HP TPM
