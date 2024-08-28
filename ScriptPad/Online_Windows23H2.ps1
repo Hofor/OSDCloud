@@ -68,7 +68,7 @@ Write-Output $Global:MyOSDCloud
 #Launch OSDCloud
 Write-Host "Starting OSDCloud" -ForegroundColor Green
 write-host "Start-OSDCloud -OSName $OSName -OSEdition $OSEdition -OSActivation $OSActivation -OSLanguage $OSLanguage"
-Start-OSDCloud -OSName $OSName -OSEdition $OSEdition -OSActivation $OSActivation -OSLanguage $OSLanguage 
+Start-OSDCloud -OSName $OSName -OSEdition $OSEdition -OSActivation $OSActivation -OSLanguage $OSLanguage -SkipAutopilot -ZTI
 
 <#This is now native in OSDCloud
 write-host "OSDCloud Process Complete, Running Custom Actions Before Reboot" -ForegroundColor Green
