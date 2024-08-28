@@ -1,8 +1,9 @@
 Invoke-Expression -Command (Invoke-RestMethod -Uri functions.osdcloud.com)
 
-
 $Manufacturer = (Get-CimInstance -Class:Win32_ComputerSystem).Manufacturer
 $Model = (Get-CimInstance -Class:Win32_ComputerSystem).Model
+
+<#
 $HPTPM = $false
 $HPBIOS = $false
 $HPIADrivers = $false
@@ -40,6 +41,7 @@ if ($HPEnterprise){
         $HPBIOS = $true
     }
 }
+#>
 
 #Variables to define the Windows OS / Edition etc to be applied during OSDCloud
 $Product = (Get-MyComputerProduct)
@@ -63,7 +65,7 @@ $Global:MyOSDCloud = [ordered]@{
     WindowsDefenderUpdate = [bool]$true
     SetTimeZone = [bool]$true
     ClearDiskConfirm = [bool]$False
-	NetFx3 = [bool]$True
+    NetFx3 = [bool]$True
     ShutdownSetupComplete = [bool]$false
     SyncMSUpCatDriverUSB = [bool]$true
     CheckSHA1 = [bool]$true
@@ -79,7 +81,7 @@ if ($DriverPack){
     $Global:MyOSDCloud.DriverPackName = $DriverPack.Name
 }
 
-<#If Drivers are expanded on the USB Drive, disable installing a Driver Pack
+#If Drivers are expanded on the USB Drive, disable installing a Driver Pack
 if (Test-DISMFromOSDCloudUSB -eq $true){
     Write-Host "Found Driver Pack Extracted on Cloud USB Flash Drive, disabling Driver Download via OSDCloud" -ForegroundColor Green
     if ($Global:MyOSDCloud.SyncMSUpCatDriverUSB -eq $true){
@@ -91,9 +93,9 @@ if (Test-DISMFromOSDCloudUSB -eq $true){
         $Global:MyOSDCloud.DriverPackName = "None"
     }
 }
-#>
+
 #Enable HPIA | Update HP BIOS | Update HP TPM
- 
+<#
 if (Test-HPIASupport){
     #$Global:MyOSDCloud.DevMode = [bool]$True
     $Global:MyOSDCloud.HPTPMUpdate = [bool]$True
@@ -111,7 +113,7 @@ if ($Manufacturer -match "Lenovo") {
     #iex (irm https://raw.githubusercontent.com/gwblok/garytown/master/OSD/CloudOSD/Manage-LenovoBiosSettings.ps1)
     #Manage-LenovoBIOSSettings -SetSettings
 }
-
+#>
 #write variables to console
 Write-Output $Global:MyOSDCloud
 
