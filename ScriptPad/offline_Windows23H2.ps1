@@ -3,46 +3,6 @@ Invoke-Expression -Command (Invoke-RestMethod -Uri functions.osdcloud.com)
 $Manufacturer = (Get-CimInstance -Class:Win32_ComputerSystem).Manufacturer
 $Model = (Get-CimInstance -Class:Win32_ComputerSystem).Model
 
-<#
-$HPTPM = $false
-$HPBIOS = $false
-$HPIADrivers = $false
-
-if ($Manufacturer -match "HP" -or $Manufacturer -match "Hewlett-Packard"){
-    $Manufacturer = "HP"
-    if ($InternetConnection){
-        $HPEnterprise = Test-HPIASupport
-    }
-}
-if ($HPEnterprise){
-    Invoke-Expression (Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/OSDeploy/OSD/master/cloud/modules/deviceshp.psm1')
-    osdcloud-InstallModuleHPCMSL
-    $TPM = osdcloud-HPTPMDetermine
-    $BIOS = osdcloud-HPBIOSDetermine
-    $HPIADrivers = $true
-    if ($TPM){
-    write-host "HP Update TPM Firmware: $TPM - Requires Interaction" -ForegroundColor Yellow
-        $HPTPM = $true
-    }
-    Else {
-        $HPTPM = $false
-    }
-
-    if ($BIOS -eq $false){
-        $CurrentVer = Get-HPBIOSVersion
-        write-host "HP System Firmware already Current: $CurrentVer" -ForegroundColor Green
-        $HPBIOS = $false
-    }
-    else
-        {
-        $LatestVer = (Get-HPBIOSUpdates -Latest).ver
-        $CurrentVer = Get-HPBIOSVersion
-        write-host "HP Update System Firmwware from $CurrentVer to $LatestVer" -ForegroundColor Yellow
-        $HPBIOS = $true
-    }
-}
-#>
-
 #Variables to define the Windows OS / Edition etc to be applied during OSDCloud
 $Product = (Get-MyComputerProduct)
 $Model = (Get-MyComputerModel)
@@ -71,49 +31,29 @@ $Global:MyOSDCloud = [ordered]@{
     CheckSHA1 = [bool]$true
 }
 
-#Testing MS Update Catalog Driver Sync
-#$Global:MyOSDCloud.DriverPackName = 'Microsoft Update Catalog'
-
-#Used to Determine Driver Pack
+#Region Determine if using native driver packs, or if I want to use extracted drivers on OSDCloudUSB
+$Product = (Get-MyComputerProduct)
 $DriverPack = Get-OSDCloudDriverPack -Product $Product -OSVersion $OSVersion -OSReleaseID $OSReleaseID
 
 if ($DriverPack){
     $Global:MyOSDCloud.DriverPackName = $DriverPack.Name
 }
 
+write-host $Global:MyOSDCloud.DriverPackName
+
 #If Drivers are expanded on the USB Drive, disable installing a Driver Pack
-if (Test-DISMFromOSDCloudUSB -eq $true){
+if ((Test-DISMFromOSDCloudUSB) -eq $true){
     Write-Host "Found Driver Pack Extracted on Cloud USB Flash Drive, disabling Driver Download via OSDCloud" -ForegroundColor Green
-    if ($Global:MyOSDCloud.SyncMSUpCatDriverUSB -eq $true){
-        write-host "Setting DriverPackName to 'Microsoft Update Catalog'"
-        $Global:MyOSDCloud.DriverPackName = 'Microsoft Update Catalog'
-    }
-    else {
-        write-host "Setting DriverPackName to 'None'"
-        $Global:MyOSDCloud.DriverPackName = "None"
-    }
+    $Global:MyOSDCloud.DriverPackName = "None"
 }
+else
+{
+    #if ($Global:MyOSDCloud.SyncMSUpCatDriverUSB -eq $true) {
+        $Global:MyOSDCloud.DriverPackName = 'Microsoft Update Catalog'   
+    #}
+}
+#endregion Driver Pack Stuff
 
-#Enable HPIA | Update HP BIOS | Update HP TPM
-<#
-if (Test-HPIASupport){
-    #$Global:MyOSDCloud.DevMode = [bool]$True
-    $Global:MyOSDCloud.HPTPMUpdate = [bool]$True
-    if ($Product -ne '83B2' -or $Model -notmatch "zbook"){$Global:MyOSDCloud.HPIAALL = [bool]$true} #I've had issues with this device and HPIA
-    #{$Global:MyOSDCloud.HPIAALL = [bool]$true}
-    $Global:MyOSDCloud.HPBIOSUpdate = [bool]$true
-    $Global:MyOSDCloud.HPCMSLDriverPackLatest = [bool]$true #In Test 
-    #Set HP BIOS Settings to what I want:
-    #iex (irm https://raw.githubusercontent.com/gwblok/garytown/master/OSD/CloudOSD/Manage-HPBiosSettings.ps1)
-    #Manage-HPBiosSettings -SetSettings
-}
-
-if ($Manufacturer -match "Lenovo") {
-    #Set Lenovo BIOS Settings to what I want:
-    #iex (irm https://raw.githubusercontent.com/gwblok/garytown/master/OSD/CloudOSD/Manage-LenovoBiosSettings.ps1)
-    #Manage-LenovoBIOSSettings -SetSettings
-}
-#>
 #write variables to console
 Write-Output $Global:MyOSDCloud
 
