@@ -20,8 +20,8 @@ $Global:MyOSDCloud = [ordered]@{
     Restart = [bool]$False
     RecoveryPartition = [bool]$true
     OEMActivation = [bool]$True
-    WindowsUpdate = [bool]$True
-    WindowsUpdateDrivers = [bool]$True
+    WindowsUpdate = [bool]$False
+    WindowsUpdateDrivers = [bool]$False
     WindowsDefenderUpdate = [bool]$True
     SetTimeZone = [bool]$true
     ClearDiskConfirm = [bool]$False
@@ -49,7 +49,7 @@ if ((Test-DISMFromOSDCloudUSB) -eq $true){
 else
 {
     #if ($Global:MyOSDCloud.SyncMSUpCatDriverUSB -eq $true) {
-        $Global:MyOSDCloud.DriverPackName = 'Microsoft Update Catalog'   
+       # $Global:MyOSDCloud.DriverPackName = 'Microsoft Update Catalog'   
     #}
 }
 #endregion Driver Pack Stuff
