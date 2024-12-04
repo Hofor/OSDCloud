@@ -8,8 +8,8 @@ $Product = (Get-MyComputerProduct)
 $Model = (Get-MyComputerModel)
 $Manufacturer = (Get-CimInstance -ClassName Win32_ComputerSystem).Manufacturer
 $OSVersion = 'Windows 11' #Used to Determine Driver Pack
-$OSReleaseID = '23H2' #Used to Determine Driver Pack
-$OSName = 'Windows 11 23H2 x64'
+$OSReleaseID = '24H2' #Used to Determine Driver Pack
+$OSName = 'Windows 11 24H2 x64'
 $OSEdition = 'Enterprise'
 $OSActivation = 'Volume'
 $OSLanguage = 'da-dk'
@@ -40,6 +40,20 @@ if ($DriverPack){
 
 write-host $Global:MyOSDCloud.DriverPackName
 
+#Enable HPIA | Update HP BIOS | Update HP TPM
+if (Test-HPIASupport){
+    #$Global:MyOSDCloud.DevMode = [bool]$True
+    $Global:MyOSDCloud.HPTPMUpdate = [bool]$True
+    if ($Product -ne '83B2' -and $Model -notmatch "zbook"){$Global:MyOSDCloud.HPIAALL = [bool]$true} #I've had issues with this device and HPIA
+    #{$Global:MyOSDCloud.HPIAALL = [bool]$true}
+    $Global:MyOSDCloud.HPBIOSUpdate = [bool]$true
+    $Global:MyOSDCloud.HPCMSLDriverPackLatest = [bool]$true #In Test 
+    #Set HP BIOS Settings to what I want:
+   # iex (irm https://raw.githubusercontent.com/Hofor/EndpointManager/main/BIOS/Manage-HPBiosSettings.ps1)
+   # Manage-HPBiosSettings -SetSettings
+}
+
+<#
 #If Drivers are expanded on the USB Drive, disable installing a Driver Pack
 if ((Test-DISMFromOSDCloudUSB) -eq $true){
     Write-Host "Found Driver Pack Extracted on Cloud USB Flash Drive, disabling Driver Download via OSDCloud" -ForegroundColor Green
@@ -50,7 +64,7 @@ else
    $Global:MyOSDCloud.DriverPackName = 'Microsoft Update Catalog'  
 }
 #endregion Driver Pack Stuff
-
+#>
 #write variables to console
 Write-Output $Global:MyOSDCloud
 
