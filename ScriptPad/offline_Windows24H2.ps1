@@ -64,7 +64,8 @@ write-host $Global:MyOSDCloud.DriverPackName
 write-host "If Test-DISMFromOSDCloudUSB"
 if ((Test-DISMFromOSDCloudUSB) -eq $true){
     Write-Host "Found Driver Pack Extracted on Cloud USB Flash Drive, disabling Driver Download via OSDCloud" -ForegroundColor Green
-    Start-DISMFromOSDCloudUSB
+    #Start-DISMFromOSDCloudUSB
+    $DriverPPKGNeeded = $false
     $Global:MyOSDCloud.DriverPackName = "None"
 }
 else
