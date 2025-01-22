@@ -39,19 +39,19 @@ write-host "Model " $Model
 $Global:MyOSDCloud.DriverPackName = $Model
 write-host $Global:MyOSDCloud.DriverPackName
 
-$DriverPack = Get-OSDCloudDriverPack -Product $Product 
-write-host  "Get-OSDCloudDriverPack: " $DriverPack
+#$DriverPack = Get-OSDCloudDriverPack -Product $Product 
+#write-host  "Get-OSDCloudDriverPack: " $DriverPack
 
 #$Global:OSDCloud.DriverPackSource
 #$DriverPack = "Hofor Drivers"
 
-$Global:OSDCloud.DriverPackOffline = Find-OSDCloudFile -Name $Global:OSDCloud.DriverPack.FileName -Path '\OSDCloud\DriverPacks\' | Sort-Object FullName
-$Global:OSDCloud.DriverPackOffline = $Global:OSDCloud.DriverPackOffline | Where-Object {$_.FullName -notlike "C*"} | Where-Object {$_.FullName -notlike "X*"} | Select-Object -First 1
-write-host "DriverPackOffline: " $Global:OSDCloud.DriverPackOffline
+#$Global:OSDCloud.DriverPackOffline = Find-OSDCloudFile -Name $Global:OSDCloud.DriverPack.FileName -Path '\OSDCloud\DriverPacks\' | Sort-Object FullName
+#$Global:OSDCloud.DriverPackOffline = $Global:OSDCloud.DriverPackOffline | Where-Object {$_.FullName -notlike "C*"} | Where-Object {$_.FullName -notlike "X*"} | Select-Object -First 1
+#write-host "DriverPackOffline: " $Global:OSDCloud.DriverPackOffline
 
 #HAK
-$Source = "E:\OSDCloud\DriverPacks\DISM\$($Manufacturer)\$($Model)"
-write-host = "Source : " $Source 
+#$Source = "E:\OSDCloud\DriverPacks\DISM\$($Manufacturer)\$($Model)"
+#write-host = "Source : " $Source 
 
 
 #if ($DriverPack){
@@ -70,7 +70,7 @@ if ((Test-DISMFromOSDCloudUSB) -eq $true){
 else
 {
    Write-Host "Else - No Driver Pack Extracted on USB!"
-   #$Global:MyOSDCloud.DriverPackName = 'Microsoft Update Catalog'  
+   $Global:MyOSDCloud.DriverPackName = 'Microsoft Update Catalog'  
 }
 #endregion Driver Pack Stuff
 
