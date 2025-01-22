@@ -36,8 +36,8 @@ $Product = (Get-MyComputerProduct)
 write-host  "Product: " $Product
 write-host "Model " $Model 
 
-$Global:MyOSDCloud.DriverPackName = $Model
-write-host $Global:MyOSDCloud.DriverPackName
+#$Global:MyOSDCloud.DriverPackName = $Model
+#write-host $Global:MyOSDCloud.DriverPackName
 
 #$DriverPack = Get-OSDCloudDriverPack -Product $Product 
 #write-host  "Get-OSDCloudDriverPack: " $DriverPack
