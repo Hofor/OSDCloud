@@ -21,7 +21,7 @@ $Global:MyOSDCloud = [ordered]@{
     RecoveryPartition = [bool]$true
     OEMActivation = [bool]$True
     WindowsUpdate = [bool]$True
-    WindowsUpdateDrivers = [bool]$False
+    WindowsUpdateDrivers = [bool]$false
     WindowsDefenderUpdate = [bool]$True
     SetTimeZone = [bool]$true
     ClearDiskConfirm = [bool]$False
@@ -32,25 +32,27 @@ $Global:MyOSDCloud = [ordered]@{
 }
 
 #Region Determine if using native driver packs, or if I want to use extracted drivers on OSDCloudUSB
-$Product = (Get-MyComputerProduct)
-$DriverPack = Get-OSDCloudDriverPack -Product $Product -OSVersion $OSVersion -OSReleaseID $OSReleaseID
+#$Product = (Get-MyComputerProduct)
+#$DriverPack = Get-OSDCloudDriverPack -Product $Product -OSVersion $OSVersion -OSReleaseID $OSReleaseID
+
+$DriverPack = "Hofor Drivers"
 
 if ($DriverPack){
-    $Global:MyOSDCloud.DriverPackName = $DriverPack.Name
+    $Global:MyOSDCloud.DriverPackName = $DriverPack
 }
 
 write-host $Global:MyOSDCloud.DriverPackName
 
 #If Drivers are expanded on the USB Drive, disable installing a Driver Pack
+write-host "If Test-DISMFromOSDCloudUSB"
 if ((Test-DISMFromOSDCloudUSB) -eq $true){
     Write-Host "Found Driver Pack Extracted on Cloud USB Flash Drive, disabling Driver Download via OSDCloud" -ForegroundColor Green
     $Global:MyOSDCloud.DriverPackName = "None"
 }
 else
 {
-    #if ($Global:MyOSDCloud.SyncMSUpCatDriverUSB -eq $true) {
-       # $Global:MyOSDCloud.DriverPackName = 'Microsoft Update Catalog'   
-    #}
+   Write-Host "Else - No Driver Pack Extracted on USB!"
+   #$Global:MyOSDCloud.DriverPackName = 'Microsoft Update Catalog'  
 }
 #endregion Driver Pack Stuff
 
