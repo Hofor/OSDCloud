@@ -32,21 +32,39 @@ $Global:MyOSDCloud = [ordered]@{
 }
 
 #Region Determine if using native driver packs, or if I want to use extracted drivers on OSDCloudUSB
-#$Product = (Get-MyComputerProduct)
-#$DriverPack = Get-OSDCloudDriverPack -Product $Product -OSVersion $OSVersion -OSReleaseID $OSReleaseID
+$Product = (Get-MyComputerProduct)
+write-host  "Product: " $Product
+write-host "Model " $Model 
 
-$DriverPack = "Hofor Drivers"
-
-if ($DriverPack){
-    $Global:MyOSDCloud.DriverPackName = $DriverPack
-}
-
+$Global:MyOSDCloud.DriverPackName = $Model
 write-host $Global:MyOSDCloud.DriverPackName
+
+$DriverPack = Get-OSDCloudDriverPack -Product $Product 
+write-host  "Get-OSDCloudDriverPack: " $DriverPack
+
+#$Global:OSDCloud.DriverPackSource
+#$DriverPack = "Hofor Drivers"
+
+$Global:OSDCloud.DriverPackOffline = Find-OSDCloudFile -Name $Global:OSDCloud.DriverPack.FileName -Path '\OSDCloud\DriverPacks\' | Sort-Object FullName
+$Global:OSDCloud.DriverPackOffline = $Global:OSDCloud.DriverPackOffline | Where-Object {$_.FullName -notlike "C*"} | Where-Object {$_.FullName -notlike "X*"} | Select-Object -First 1
+write-host "DriverPackOffline: " $Global:OSDCloud.DriverPackOffline
+
+#HAK
+$Source = "E:\OSDCloud\DriverPacks\DISM\$($Manufacturer)\$($Model)"
+write-host = "Source : " $Source 
+
+
+#if ($DriverPack){
+#    $Global:MyOSDCloud.DriverPackName = $DriverPack
+#}
+
+#write-host $Global:MyOSDCloud.DriverPackName
 
 #If Drivers are expanded on the USB Drive, disable installing a Driver Pack
 write-host "If Test-DISMFromOSDCloudUSB"
 if ((Test-DISMFromOSDCloudUSB) -eq $true){
     Write-Host "Found Driver Pack Extracted on Cloud USB Flash Drive, disabling Driver Download via OSDCloud" -ForegroundColor Green
+    Start-DISMFromOSDCloudUSB
     $Global:MyOSDCloud.DriverPackName = "None"
 }
 else
