@@ -23,6 +23,7 @@ $Global:MyOSDCloud = [ordered]@{
     WindowsUpdate = [bool]$True
     WindowsUpdateDrivers = [bool]$false
     WindowsDefenderUpdate = [bool]$True
+    MSCatalogFirmware = $true
     SetTimeZone = [bool]$true
     ClearDiskConfirm = [bool]$False
     NetFx3 = [bool]$True
@@ -35,30 +36,6 @@ $Global:MyOSDCloud = [ordered]@{
 $Product = (Get-MyComputerProduct)
 write-host  "Product: " $Product
 write-host "Model " $Model 
-
-#$Global:MyOSDCloud.DriverPackName = $Model
-#write-host $Global:MyOSDCloud.DriverPackName
-
-#$DriverPack = Get-OSDCloudDriverPack -Product $Product 
-#write-host  "Get-OSDCloudDriverPack: " $DriverPack
-
-#$Global:OSDCloud.DriverPackSource
-#$DriverPack = "Hofor Drivers"
-
-#$Global:OSDCloud.DriverPackOffline = Find-OSDCloudFile -Name $Global:OSDCloud.DriverPack.FileName -Path '\OSDCloud\DriverPacks\' | Sort-Object FullName
-#$Global:OSDCloud.DriverPackOffline = $Global:OSDCloud.DriverPackOffline | Where-Object {$_.FullName -notlike "C*"} | Where-Object {$_.FullName -notlike "X*"} | Select-Object -First 1
-#write-host "DriverPackOffline: " $Global:OSDCloud.DriverPackOffline
-
-#HAK
-#$Source = "E:\OSDCloud\DriverPacks\DISM\$($Manufacturer)\$($Model)"
-#write-host = "Source : " $Source 
-
-
-#if ($DriverPack){
-#    $Global:MyOSDCloud.DriverPackName = $DriverPack
-#}
-
-#write-host $Global:MyOSDCloud.DriverPackName
 
 #If Drivers are expanded on the USB Drive, disable installing a Driver Pack
 write-host "If Test-DISMFromOSDCloudUSB"
