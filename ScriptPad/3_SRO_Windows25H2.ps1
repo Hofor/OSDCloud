@@ -13,6 +13,7 @@ $OSName = 'Windows 11 25H2 x64'
 $OSEdition = 'Enterprise'
 $OSActivation = 'Volume'
 $OSLanguage = 'da-dk'
+$SkipAutopilot = [bool]$true
 
 #Set OSDCloud Vars
 $Global:MyOSDCloud = [ordered]@{
@@ -57,7 +58,7 @@ Write-Output $Global:MyOSDCloud
 #Launch OSDCloud
 Write-Host "Starting OSDCloud" -ForegroundColor Green
 write-host "Start-OSDCloud -OSName $OSName -OSEdition $OSEdition -OSActivation $OSActivation -OSLanguage $OSLanguage"
-Start-OSDCloud -OSName $OSName -OSEdition $OSEdition -OSActivation $OSActivation -OSLanguage $OSLanguage -SkipAutopilot -ZTI
+Start-OSDCloud -OSName $OSName -OSEdition $OSEdition -OSActivation $OSActivation -OSLanguage $OSLanguage -SkipAutopilot $SkipAutopilot -ZTI
 
 <#This is now native in OSDCloud
 write-host "OSDCloud Process Complete, Running Custom Actions Before Reboot" -ForegroundColor Green
