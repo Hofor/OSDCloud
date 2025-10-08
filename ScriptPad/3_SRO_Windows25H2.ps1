@@ -32,16 +32,16 @@ $Global:MyOSDCloud = [ordered]@{
 
 $Params = @{
     OSVersion = "Windows 11"
-    OSBuild = "22H2"
-    OSEdition = "Pro"
-    OSLanguage = "en-us"
-    OSLicense = "Retail"
+    OSBuild = "25H2"
+    OSEdition = "Enterprise"
+    OSLanguage = "da-dk"
+    OSLicense = "Volume"
     ZTI = $true
-    Firmware = $false
+    Firmware = $true
     SkipAutopilot = $true
     SkipODT = $true
 }
--OSName $OSName -OSEdition $OSEdition -OSActivation $OSActivation -OSLanguage $OSLanguage
+#-OSName $OSName -OSEdition $OSEdition -OSActivation $OSActivation -OSLanguage $OSLanguage
 #Region Determine if using native driver packs, or if I want to use extracted drivers on OSDCloudUSB
 $Product = (Get-MyComputerProduct)
 $DriverPack = Get-OSDCloudDriverPack -Product $Product -OSVersion $OSVersion -OSReleaseID $OSReleaseID
