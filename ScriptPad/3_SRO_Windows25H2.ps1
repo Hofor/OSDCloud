@@ -66,6 +66,10 @@ else
 #write variables to console
 Write-Output $Global:MyOSDCloud
 
+$Serial = Get-WmiObject Win32_bios | Select-Object -ExpandProperty SerialNumber
+Write-Output "SRO-$Serial"
+New-OSDCloudComputerName -ComputerName "SRO-$Serial"
+
 #Launch OSDCloud
 Write-Host "Starting OSDCloud" -ForegroundColor Green
 write-host "Start-OSDCloud -OSName $OSName -OSEdition $OSEdition -OSActivation $OSActivation -OSLanguage $OSLanguage"
