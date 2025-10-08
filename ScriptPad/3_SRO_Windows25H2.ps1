@@ -13,7 +13,6 @@ $OSName = 'Windows 11 25H2 x64'
 $OSEdition = 'Enterprise'
 $OSActivation = 'Volume'
 $OSLanguage = 'da-dk'
-$SkipAutopilot = [bool]$true
 
 #Set OSDCloud Vars
 $Global:MyOSDCloud = [ordered]@{
