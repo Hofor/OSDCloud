@@ -59,18 +59,17 @@ Write-Host "Starting OSDCloud" -ForegroundColor Green
 write-host "Start-OSDCloud -OSName $OSName -OSEdition $OSEdition -OSActivation $OSActivation -OSLanguage $OSLanguage"
 Start-OSDCloud -OSName $OSName -OSEdition $OSEdition -OSActivation $OSActivation -OSLanguage $OSLanguage -SkipAutopilot -ZTI
 
-$OSDCloudScripts = "D:\OSDCloud\PowerShell\"
-write-host "Copy Start-OSDCloud.windeploy.specialize.ps1"
-Copy-Item "$OSDCloudScripts\Start-OSDCloud.windeploy.specialize.ps1" -Destination "C:\Windows\System32\OOBE\"
+#$OSDCloudScripts = "D:\OSDCloud\PowerShell\"
+#write-host "Copy Start-OSDCloud.windeploy.specialize.ps1"
+#Copy-Item "$OSDCloudScripts\Start-OSDCloud.windeploy.specialize.ps1" -Destination "C:\Windows\System32\OOBE\"
 
 #Restart Computer from WInPE into Full OS to continue Process
 restart-computer
 
-write-host "Invoke Copy Start-OSDCloud.windeploy.specialize.ps1"
-Invoke-Expression (Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/Hofor/OSDCloud/refs/heads/main/CopyOBBE.ps1')
+#write-host "Invoke Copy Start-OSDCloud.windeploy.specialize.ps1"
+#Invoke-WebRequest 'https://raw.githubusercontent.com/Hofor/OSDCloud/refs/heads/main/CopyOBBE.ps1' -OutFile "C:\Windows\System32\OOBE\Start-OSDCloud.windeploy.specialize.ps1"
 
-write-host "Copy Start-OSDCloud.windeploy.specialize.ps1"
-Copy-Item "$OSDCloudScripts\Start-OSDCloud.windeploy.specialize.ps1" -Destination "C:\Windows\System32\OOBE\"
-
- osdcloud-RestartComputer
+#write-host "Copy Start-OSDCloud.windeploy.specialize.ps1"
+#Copy-Item "$OSDCloudScripts\Start-OSDCloud.windeploy.specialize.ps1" -Destination "C:\Windows\System32\OOBE\"
+#osdcloud-RestartComputer
 
