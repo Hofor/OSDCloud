@@ -72,5 +72,5 @@ Invoke-Expression (Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/Hof
 write-host "Copy Start-OSDCloud.windeploy.specialize.ps1"
 Copy-Item "$OSDCloudScripts\Start-OSDCloud.windeploy.specialize.ps1" -Destination "C:\Windows\System32\OOBE\"
 
-restart-computer
+ osdcloud-RestartComputer
 
