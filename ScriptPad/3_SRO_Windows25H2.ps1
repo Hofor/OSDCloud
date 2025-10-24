@@ -66,7 +66,9 @@ Copy-Item "$OSDCloudScripts\Start-OSDCloud.windeploy.specialize.ps1" -Destinatio
 #Restart Computer from WInPE into Full OS to continue Process
 restart-computer
 
-Start /Wait PowerShell -NoL -C Invoke-WebPSScript https://raw.githubusercontent.com/Hofor/OSDCloud/refs/heads/main/renameDeviceSRO.ps1
+Start /Wait PowerShell -NoL -C Invoke-WebPSScript https://raw.githubusercontent.com/Hofor/OSDCloud/refs/heads/main/CopyOBBE.ps1
+
+Invoke-Expression (Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/Hofor/OSDCloud/refs/heads/main/CopyOBBE.ps1')
 
 Copy-Item "$OSDCloudScripts\Start-OSDCloud.windeploy.specialize.ps1" -Destination "C:\Windows\System32\OOBE\"
 
