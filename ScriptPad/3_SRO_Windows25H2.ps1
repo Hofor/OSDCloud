@@ -65,7 +65,7 @@ Invoke-WebRequest 'https://raw.githubusercontent.com/Hofor/OSDCloud/refs/heads/m
 write-host "Invoke Copy unattend.xml"
 Invoke-WebRequest 'https://raw.githubusercontent.com/Hofor/OSDCloud/refs/heads/main/unattend.xml' -OutFile "C:\Windows\Panther\unattend.xml"
 
-Write-DarkGrayHost  "Start-OSDCloud.windeploy.specialize"
+write-host  "Start-OSDCloud.windeploy.specialize"
 Start-OSDCloud.windeploy.specialize
 
 #Restart Computer from WInPE into Full OS to continue Process
@@ -77,9 +77,9 @@ Invoke-WebRequest 'https://raw.githubusercontent.com/Hofor/OSDCloud/refs/heads/m
 write-host "Invoke Copy unattend.xml"
 Invoke-WebRequest 'https://raw.githubusercontent.com/Hofor/OSDCloud/refs/heads/main/unattend.xml' -OutFile "C:\Windows\Panther\unattend.xml"
 
-Write-DarkGrayHost  "Start-OSDCloud.windeploy.specialize"
+write-host  "Start-OSDCloud.windeploy.specialize"
 Start-OSDCloud.windeploy.specialize
 
 #Restart Computer from WInPE into Full OS to continue Process
-restart-computer
+#restart-computer
 
