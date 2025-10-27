@@ -9,7 +9,7 @@ $Model = (Get-MyComputerModel)
 $Manufacturer = (Get-CimInstance -ClassName Win32_ComputerSystem).Manufacturer
 $OSVersion = 'Windows 11' #Used to Determine Driver Pack
 $OSReleaseID = '25H2' #Used to Determine Driver Pack
-$OSName = 'Windows 11 24H2 x64'
+$OSName = 'Windows 11 25H2 x64'
 $OSEdition = 'Enterprise'
 $OSActivation = 'Volume'
 $OSLanguage = 'da-dk'
@@ -59,17 +59,27 @@ Write-Host "Starting OSDCloud" -ForegroundColor Green
 write-host "Start-OSDCloud -OSName $OSName -OSEdition $OSEdition -OSActivation $OSActivation -OSLanguage $OSLanguage"
 Start-OSDCloud -OSName $OSName -OSEdition $OSEdition -OSActivation $OSActivation -OSLanguage $OSLanguage -SkipAutopilot -ZTI
 
-#$OSDCloudScripts = "D:\OSDCloud\PowerShell\"
-#write-host "Copy Start-OSDCloud.windeploy.specialize.ps1"
-#Copy-Item "$OSDCloudScripts\Start-OSDCloud.windeploy.specialize.ps1" -Destination "C:\Windows\System32\OOBE\"
+write-host "Invoke Copy Start-OSDCloud.windeploy.specialize.ps1"
+Invoke-WebRequest 'https://raw.githubusercontent.com/Hofor/OSDCloud/refs/heads/main/CopyOBBE.ps1' -OutFile "C:\Windows\System32\OOBE\Start-OSDCloud.windeploy.specialize.ps1"
+
+write-host "Invoke Copy unattend.xml"
+Invoke-WebRequest 'https://raw.githubusercontent.com/Hofor/OSDCloud/refs/heads/main/unattend.xml' -OutFile "C:\Windows\Panther\unattend.xml"
+
+Write-DarkGrayHost  "Start-OSDCloud.windeploy.specialize"
+Start-OSDCloud.windeploy.specialize
 
 #Restart Computer from WInPE into Full OS to continue Process
 restart-computer
 
-#write-host "Invoke Copy Start-OSDCloud.windeploy.specialize.ps1"
-#Invoke-WebRequest 'https://raw.githubusercontent.com/Hofor/OSDCloud/refs/heads/main/CopyOBBE.ps1' -OutFile "C:\Windows\System32\OOBE\Start-OSDCloud.windeploy.specialize.ps1"
+write-host "Invoke Copy Start-OSDCloud.windeploy.specialize.ps1"
+Invoke-WebRequest 'https://raw.githubusercontent.com/Hofor/OSDCloud/refs/heads/main/CopyOBBE.ps1' -OutFile "C:\Windows\System32\OOBE\Start-OSDCloud.windeploy.specialize.ps1"
 
-#write-host "Copy Start-OSDCloud.windeploy.specialize.ps1"
-#Copy-Item "$OSDCloudScripts\Start-OSDCloud.windeploy.specialize.ps1" -Destination "C:\Windows\System32\OOBE\"
-#osdcloud-RestartComputer
+write-host "Invoke Copy unattend.xml"
+Invoke-WebRequest 'https://raw.githubusercontent.com/Hofor/OSDCloud/refs/heads/main/unattend.xml' -OutFile "C:\Windows\Panther\unattend.xml"
+
+Write-DarkGrayHost  "Start-OSDCloud.windeploy.specialize"
+Start-OSDCloud.windeploy.specialize
+
+#Restart Computer from WInPE into Full OS to continue Process
+restart-computer
 
