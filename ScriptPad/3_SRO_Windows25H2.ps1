@@ -63,7 +63,42 @@ write-host "Invoke Copy Start-OSDCloud.windeploy.specialize.ps1"
 Invoke-WebRequest 'https://raw.githubusercontent.com/Hofor/OSDCloud/refs/heads/main/CopyOBBE.ps1' -OutFile "C:\Windows\System32\OOBE\Start-OSDCloud.windeploy.specialize.ps1"
 
 write-host "Invoke Copy unattend.xml"
-Invoke-WebRequest 'https://raw.githubusercontent.com/Hofor/OSDCloud/refs/heads/main/unattend.xml' -OutFile "C:\Windows\Panther\unattend.xml"
+#Invoke-WebRequest 'https://raw.githubusercontent.com/Hofor/OSDCloud/refs/heads/main/unattend.xml' -OutFile "C:\Windows\Panther\unattend.xml"
+
+write-host "Invoke Set unattend.xml with new Data"
+
+$UnattendXml = @'
+<settings pass="specialize">
+  <component name="Microsoft-Windows-Deployment" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
+    <RunSynchronous>
+      <RunSynchronousCommand>
+        <Order>1</Order>
+        <Path>powershell.exe -ExecutionPolicy Bypass -File C:\Windows\System32\OOBE\Start-OSDCloud.windeploy.specialize.ps1</Path>
+        <Description>Run OSDCloud Specialize Script</Description>
+      </RunSynchronousCommand>
+    </RunSynchronous>
+  </component>
+</settings>
+'@
+
+$Panther = 'C:\Windows\Panther'
+$UnattendPath = "$Panther\unattend.xml"
+
+[xml]$xml = Get-Content $UnattendPath
+
+# Find <settings pass="specialize">
+$specializeNode = $xml.unattend.settings | Where-Object { $_.pass -eq "specialize" }
+
+if ($specializeNode) {
+    # Erstat hele indholdet med ny værdi
+    $newContent = $UnattendXml
+    # Konverter string til XML og erstat
+    $newXml = [xml]("<settings pass='specialize'>" + $newContent + "</settings
+    $xml.unattend.settings[$index] = $newXml.settings
+}
+
+# Gem ændringer
+$xml.Save($UnattendPath)
 
 write-host  "Start-OSDCloud.windeploy.specialize"
 Start-OSDCloud.windeploy.specialize
@@ -75,11 +110,45 @@ write-host "Invoke Copy Start-OSDCloud.windeploy.specialize.ps1"
 Invoke-WebRequest 'https://raw.githubusercontent.com/Hofor/OSDCloud/refs/heads/main/CopyOBBE.ps1' -OutFile "C:\Windows\System32\OOBE\Start-OSDCloud.windeploy.specialize.ps1"
 
 write-host "Invoke Copy unattend.xml"
-Invoke-WebRequest 'https://raw.githubusercontent.com/Hofor/OSDCloud/refs/heads/main/unattend.xml' -OutFile "C:\Windows\Panther\unattend.xml"
+#Invoke-WebRequest 'https://raw.githubusercontent.com/Hofor/OSDCloud/refs/heads/main/unattend.xml' -OutFile "C:\Windows\Panther\unattend.xml"
+
+write-host "Invoke Set unattend.xml with new Data"
+
+$UnattendXml = @'
+<settings pass="specialize">
+  <component name="Microsoft-Windows-Deployment" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
+    <RunSynchronous>
+      <RunSynchronousCommand>
+        <Order>1</Order>
+        <Path>powershell.exe -ExecutionPolicy Bypass -File C:\Windows\System32\OOBE\Start-OSDCloud.windeploy.specialize.ps1</Path>
+        <Description>Run OSDCloud Specialize Script</Description>
+      </RunSynchronousCommand>
+    </RunSynchronous>
+  </component>
+</settings>
+'@
+
+$Panther = 'C:\Windows\Panther'
+$UnattendPath = "$Panther\unattend.xml"
+
+[xml]$xml = Get-Content $UnattendPath
+
+# Find <settings pass="specialize">
+$specializeNode = $xml.unattend.settings | Where-Object { $_.pass -eq "specialize" }
+
+if ($specializeNode) {
+    # Erstat hele indholdet med ny værdi
+    $newContent = $UnattendXml
+    # Konverter string til XML og erstat
+    $newXml = [xml]("<settings pass='specialize'>" + $newContent + "</settings
+    $xml.unattend.settings[$index] = $newXml.settings
+}
+
+# Gem ændringer
+$xml.Save($UnattendPath)
 
 write-host  "Start-OSDCloud.windeploy.specialize"
 Start-OSDCloud.windeploy.specialize
 
-#Restart Computer from WInPE into Full OS to continue Process
-#restart-computer
+
 
