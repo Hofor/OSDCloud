@@ -20,3 +20,5 @@ $Params = @{
 Start-OOBEDeploy @Params
 
 Write-Host "OOBE configuration complete." -ForegroundColor Green
+
+Stop-Transcript
