@@ -29,7 +29,18 @@ Write-Host "Fjern uønskede Windows Capabilities" -ForegroundColor Green
 $CapabilitiesToRemove = @(
     "OpenSSH.Client~~~~0.0.1.0",
     "XPS.Viewer~~~~0.0.1.0",
-    "Microsoft.Windows.WordPad~~~~0.0.1.0"
+    "Microsoft.Windows.WordPad~~~~0.0.1.0",
+	"OneCoreUAP.OneSync~~~~0.0.1.0",
+	"Print.Management.Console~~~~0.0.1.0",
+	"VBSCRIPT~~~~",
+	"Media.WindowsMediaPlayer~~~~0.0.12.0",
+	"Microsoft.Windows.PowerShell.ISE",
+	"Microsoft.Wallpapers.Extended",
+	"MathRecognizer~~~~0.0.1.0",
+	"Language.TextToSpeech~~~da-DK~0.0.1.0",
+	"App.StepsRecorder~~~~0.0.1.0",
+	"Browser.InternetExplorer~~~~0.0.11.0",
+	"MathRecognizer~~~~0.0.1.0"
 )
 
 foreach ($cap in $CapabilitiesToRemove) {
@@ -67,9 +78,27 @@ $AppsToRemove = @(
         "Microsoft.YourPhone",
         "Microsoft.ZuneMusic",
         "Microsoft.ZuneVideo",
-	      "Microsoft.XboxApp",
+	    "Microsoft.XboxApp",
         "Microsoft.OneNote",
-        "Microsoft.MicrosoftSolitaireCollection"
+        "Microsoft.MicrosoftSolitaireCollection",
+		"AppUp.ThunderboltControlCenter",
+		"DolbyLaboratories.DolbyAccess",
+		"DolbyLaboratories.DolbyDigitalPlusDecoderOEM",
+		"Microsoft.BingSearch",
+		"Microsoft.Edge.GameAssist",
+		"Microsoft.MicrosoftEdge.Stable",
+		"Microsoft.OutlookForWindows",
+		"Microsoft.OutlookForWindows_1.0.0.0_neutral__8wekyb3d8bbwe",
+		"Microsoft.Paint",
+		"Microsoft.Windows.DevHome",
+		"Microsoft.Windows.Photos",
+		"Microsoft.WindowsAlarms",
+		"Microsoft.WindowsCalculator",
+		"Microsoft.WindowsNotepad",
+		"Microsoft.WindowsStore",
+		"Microsoft.WindowsTerminal",
+		"MicrosoftCorporationII.QuickAssist",
+		"MicrosoftWindows.Client.WebExperience"
 )
 
 Write-Host "Fjern uønskede Inbox Apps" -ForegroundColor Green
