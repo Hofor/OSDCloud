@@ -23,9 +23,10 @@ Write-Host "Local admin user '$Username' created"
 #Get-NetConnectionProfile | Set-NetConnectionProfile -NetworkCategory Private
 #Write-Host "Network profile set to Private"
 
+
 # 4. Fjern uønskede Windows Capabilities
 Write-Host "Fjern uønskede Windows Capabilities" -ForegroundColor Green
-
+<#
 $CapabilitiesToRemove = @(
     "OpenSSH.Client~~~~0.0.1.0",
     "XPS.Viewer~~~~0.0.1.0",
@@ -47,8 +48,9 @@ foreach ($cap in $CapabilitiesToRemove) {
     Write-Host "Removing capability: $cap"
     Remove-WindowsCapability -Online -Name $cap
 }
-
+#>
 # 5. Fjern uønskede Inbox Apps
+<#
 $AppsToRemove = @(
 		"MSTeams",
         "MicrosoftTeams",
@@ -100,6 +102,7 @@ $AppsToRemove = @(
 		"MicrosoftCorporationII.QuickAssist",
 		"MicrosoftWindows.Client.WebExperience"
 )
+#>
 
 Write-Host "Fjern uønskede Inbox Apps" -ForegroundColor Green
 
@@ -110,7 +113,6 @@ foreach ($app in $AppsToRemove) {
 }
 
 # 6. Forbered til OOBE
-
 try {
 	Write-Host "Specialize configuration. Proceeding to OOBE..." -ForegroundColor Green
 	
