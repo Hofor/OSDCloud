@@ -70,3 +70,39 @@ Invoke-WebRequest 'https://raw.githubusercontent.com/Hofor/OSDCloud/refs/heads/m
 
 write-host "Start-OSDCloud.windeploy.specialize"
 #Start-OSDCloud.windeploy.specialize
+
+#region Windows
+if ($WindowsPhase -eq 'Windows') {
+
+    #Load OSD and Azure stuff
+
+    #Invoke-Expression (Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/OSDeploy/OSD/master/cloud/modules/_oobe.psm1')
+    #Invoke-Expression (Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/OSDeploy/OSD/master/cloud/modules/_anywhere.psm1')
+    #Invoke-Expression (Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/OSDeploy/OSD/master/cloud/modules/_oobewin.psm1')
+    #Invoke-Expression (Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/OSDeploy/OSD/master/cloud/modules/autopilot.psm1')
+    #Invoke-Expression (Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/OSDeploy/OSD/master/cloud/modules/defender.psm1')
+     
+    osdcloud-SetExecutionPolicy
+    #osdcloud-InstallPackageManagement
+    #osdcloud-InstallModuleKeyVault
+    #osdcloud-InstallModuleOSD
+    #osdcloud-InstallModuleAzureAD
+    
+    #osdcloud-RemoveAppx -Basic
+    osdcloud-UpdateDefenderStack
+    osdcloud-NetFX
+}
+#endregion
+#=================================================
+#================================================
+#  [PostOS] SetupComplete CMD Command Line
+#================================================
+Write-Host -ForegroundColor Green "Create C:\Windows\Setup\Scripts\SetupComplete.cmd"
+$SetupCompleteCMD = @'
+PowerShell -NoL -Com Set-ExecutionPolicy RemoteSigned -Force
+Set Path = %PATH%;C:\Program Files\WindowsPowerShell\Scripts
+Start /Wait PowerShell -NoL -C Invoke-WebPSScript https://raw.githubusercontent.com/Hofor/OSDCloud/refs/heads/main/renameDeviceSRO.ps1
+'@
+$SetupCompleteCMD | Out-File -FilePath 'C:\Windows\Setup\Scripts\SetupComplete.cmd' -Encoding ascii -Force
+
+Start /Wait PowerShell -NoL -C Invoke-WebPSScript https://cleanup.osdcloud.ch
