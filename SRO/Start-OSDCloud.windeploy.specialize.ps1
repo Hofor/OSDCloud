@@ -19,17 +19,11 @@ New-LocalUser -Name $Username -Password $Password -FullName "SRO Local Admin" -D
 Add-LocalGroupMember -Group "Administratorer" -Member $Username
 Write-Host "Local admin user '$Username' created"
 
-# 5. Sæt netværksprofil til privat
-Get-NetConnectionProfile | Set-NetConnectionProfile -NetworkCategory Private
-Write-Host "Network profile set to Private"
+# 3. Sæt netværksprofil til privat
+#Get-NetConnectionProfile | Set-NetConnectionProfile -NetworkCategory Private
+#Write-Host "Network profile set to Private"
 
-# 6. Forbered til OOBE
-Set-ItemProperty -Path "HKLM:\System\Setup" -Name CmdLine -Value 'PowerShell -ExecutionPolicy Bypass -Command Start-OSDCloud.windeploy.oobe'
-Start-Process -WorkingDirectory "$env:SystemRoot\System32\OOBE" -FilePath WinDeploy.exe
-
-Write-Host "Specialize configuration complete. Proceeding to OOBE..." -ForegroundColor Green
-
-# 7. Fjern uønskede Windows Capabilities
+# 4. Fjern uønskede Windows Capabilities
 Write-Host "Fjern uønskede Windows Capabilities" -ForegroundColor Green
 
 $CapabilitiesToRemove = @(
@@ -43,7 +37,7 @@ foreach ($cap in $CapabilitiesToRemove) {
     Remove-WindowsCapability -Online -Name $cap
 }
 
-# 8. Fjern uønskede Inbox Apps
+# 5. Fjern uønskede Inbox Apps
 $AppsToRemove = @(
 		"MSTeams",
         "MicrosoftTeams",
@@ -85,5 +79,13 @@ foreach ($app in $AppsToRemove) {
     Get-AppxPackage -Name $app | Remove-AppxPackage
     Get-AppxProvisionedPackage -Online | Where-Object DisplayName -EQ $app | Remove-AppxProvisionedPackage -Online
 }
+
+# 6. Forbered til OOBE
+Write-Host "Specialize configuration. Proceeding to OOBE..." -ForegroundColor Green
+
+Set-ItemProperty -Path "HKLM:\System\Setup" -Name CmdLine -Value 'PowerShell -ExecutionPolicy Bypass -Command Start-OSDCloud.windeploy.oobe'
+Start-Process -WorkingDirectory "$env:SystemRoot\System32\OOBE" -FilePath WinDeploy.exe
+
+Write-Host "Specialize configuration complete. Proceeding to OOBE..." -ForegroundColor Green
 
 Stop-Transcript
