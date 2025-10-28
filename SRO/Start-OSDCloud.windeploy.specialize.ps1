@@ -115,7 +115,7 @@ Write-Host "Specialize configuration. Proceeding to OOBE..." -ForegroundColor Gr
 Set-ItemProperty -Path "HKLM:\System\Setup" -Name CmdLine -Value 'PowerShell -ExecutionPolicy Bypass -File C:\Windows\System32\OOBE\Start-OOBEDeploy.ps1'
 
 #Set-ItemProperty -Path "HKLM:\System\Setup" -Name CmdLine -Value 'PowerShell -ExecutionPolicy Bypass -Command Start-OSDCloud.windeploy.oobe'
-#Start-Process -WorkingDirectory "$env:SystemRoot\System32\OOBE" -FilePath WinDeploy.exe
+Start-Process -WorkingDirectory "$env:SystemRoot\System32\OOBE" -FilePath WinDeploy.exe
 
 Write-Host "Specialize configuration complete. Proceeding to OOBE..." -ForegroundColor Green
 
