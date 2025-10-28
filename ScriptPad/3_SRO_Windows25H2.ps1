@@ -59,51 +59,6 @@ Write-Host "Starting OSDCloud" -ForegroundColor Green
 write-host "Start-OSDCloud -OSName $OSName -OSEdition $OSEdition -OSActivation $OSActivation -OSLanguage $OSLanguage"
 Start-OSDCloud -OSName $OSName -OSEdition $OSEdition -OSActivation $OSActivation -OSLanguage $OSLanguage -SkipAutopilot -ZTI
 
-write-host "Invoke Copy Start-OSDCloud.windeploy.specialize.ps1"
-Invoke-WebRequest 'https://raw.githubusercontent.com/Hofor/OSDCloud/refs/heads/main/CopyOBBE.ps1' -OutFile "C:\Windows\System32\OOBE\Start-OSDCloud.windeploy.specialize.ps1"
-
-write-host "Set Content In unattend.xml"
-
-
-# Indlæs XML
-[xml]$xml = Get-Content "C:\Windows\Panther\unattend.xml"
-
-# Find alle <settings> noder
-$settingsNodes = $xml.unattend.settings
-# Find index for <settings pass="specialize">
-$index = ($settingsNodes | Where-Object { $_.pass -eq "specialize" })
-
-if ($index) {
-    # Fjern eksisterende node
-    $xml.unattend.RemoveChild($index) | Out-Null
-}
-
-# Opret ny <settings pass="specialize"> node som XML string
-$newSettingsXml = @"
-<settings pass="specialize">
-  <component name="Microsoft-Windows-Deployment" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
-    <RunSynchronous>
-      <RunSynchronousCommand>
-        <Order>1</Order>
-        <Path>powershell.exe -ExecutionPolicy Bypass -File C:\Windows\System32\OOBE\Start-OSDCloud.windeploy.specialize.ps1</Path>
-        <Description>Run OSDCloud Specialize Script</Description>
-      </RunSynchronousCommand>
-    </RunSynchronous>
-  </component>
-</settings>
-"@
-
-# Konverter string til XML og tilføj til dokumentet
-[xml]$newNode = $newSettingsXml
-$importedNode = $xml.ImportNode($newNode.settings, $true)
-$xml.unattend.AppendChild($importedNode) | Out-Null
-
-# Gem ændret XML
-$xml.Save("C:\Windows\Panther\unattend.xml")
-
-write-host "Start-OSDCloud.windeploy.specialize"
-Start-OSDCloud.windeploy.specialize
-
 #Restart Computer from WInPE into Full OS to continue Process
 restart-computer
 
@@ -111,43 +66,7 @@ write-host "Invoke Copy Start-OSDCloud.windeploy.specialize.ps1"
 Invoke-WebRequest 'https://raw.githubusercontent.com/Hofor/OSDCloud/refs/heads/main/CopyOBBE.ps1' -OutFile "C:\Windows\System32\OOBE\Start-OSDCloud.windeploy.specialize.ps1"
 
 write-host "Set Content In unattend.xml"
-
-
-# Indlæs XML
-[xml]$xml = Get-Content "C:\Windows\Panther\unattend.xml"
-
-# Find alle <settings> noder
-$settingsNodes = $xml.unattend.settings
-# Find index for <settings pass="specialize">
-$index = ($settingsNodes | Where-Object { $_.pass -eq "specialize" })
-
-if ($index) {
-    # Fjern eksisterende node
-    $xml.unattend.RemoveChild($index) | Out-Null
-}
-
-# Opret ny <settings pass="specialize"> node som XML string
-$newSettingsXml = @"
-<settings pass="specialize">
-  <component name="Microsoft-Windows-Deployment" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
-    <RunSynchronous>
-      <RunSynchronousCommand>
-        <Order>1</Order>
-        <Path>powershell.exe -ExecutionPolicy Bypass -File C:\Windows\System32\OOBE\Start-OSDCloud.windeploy.specialize.ps1</Path>
-        <Description>Run OSDCloud Specialize Script</Description>
-      </RunSynchronousCommand>
-    </RunSynchronous>
-  </component>
-</settings>
-"@
-
-# Konverter string til XML og tilføj til dokumentet
-[xml]$newNode = $newSettingsXml
-$importedNode = $xml.ImportNode($newNode.settings, $true)
-$xml.unattend.AppendChild($importedNode) | Out-Null
-
-# Gem ændret XML
-$xml.Save("C:\Windows\Panther\unattend.xml")
+Invoke-WebRequest 'https://raw.githubusercontent.com/Hofor/OSDCloud/refs/heads/main/unattend.xml' -OutFile "C:\Windows\Panther\unattend.xml"
 
 write-host "Start-OSDCloud.windeploy.specialize"
 Start-OSDCloud.windeploy.specialize
