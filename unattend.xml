@@ -1,13 +1,14 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <unattend xmlns="urn:schemas-microsoft-com:unattend">
-<settings pass="specialize">
-  <component name="Microsoft-Windows-Deployment" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
-    <RunSynchronous>
-      <RunSynchronousCommand>
-        <Order>1</Order>
-        <Path>powershell.exe -ExecutionPolicy Bypass -File C:\Windows\System32\OOBE\Start-OSDCloud.windeploy.specialize.ps1</Path>
-        <Description>Run OSDCloud Specialize Script</Description>
-      </RunSynchronousCommand>
-    </RunSynchronous>
-  </component>
-</settings>
+   <settings pass="specialize" xmlns="">
+    <component name="Microsoft-Windows-Deployment" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
+      <RunSynchronous>
+        <RunSynchronousCommand>
+          <Order>1</Order>
+          <Path>powershell.exe -ExecutionPolicy Bypass -File C:\Windows\System32\OOBE\Start-OSDCloud.windeploy.specialize.ps1</Path>
+          <Description>Run OSDCloud Specialize Script</Description>
+        </RunSynchronousCommand>
+      </RunSynchronous>
+    </component>
+  </settings>
+</unattend>
