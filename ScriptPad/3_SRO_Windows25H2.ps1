@@ -63,10 +63,10 @@ Start-OSDCloud -OSName $OSName -OSEdition $OSEdition -OSActivation $OSActivation
 restart-computer
 
 write-host "Invoke Copy Start-OSDCloud.windeploy.specialize.ps1"
-Invoke-WebRequest 'https://raw.githubusercontent.com/Hofor/OSDCloud/refs/heads/main/CopyOBBE.ps1' -OutFile "C:\Windows\System32\OOBE\Start-OSDCloud.windeploy.specialize.ps1"
+Invoke-WebRequest 'https://raw.githubusercontent.com/Hofor/OSDCloud/refs/heads/main/SRO/Start-OSDCloud.windeploy.specialize.ps1' -OutFile "C:\Windows\System32\OOBE\Start-OSDCloud.windeploy.specialize.ps1"
 
 write-host "Set Content In unattend.xml"
-Invoke-WebRequest 'https://raw.githubusercontent.com/Hofor/OSDCloud/refs/heads/main/unattend.xml' -OutFile "C:\Windows\Panther\unattend.xml"
+Invoke-WebRequest 'https://raw.githubusercontent.com/Hofor/OSDCloud/refs/heads/main/SRO/unattend.xml' -OutFile "C:\Windows\Panther\unattend.xml"
 
 write-host "Start-OSDCloud.windeploy.specialize"
-Start-OSDCloud.windeploy.specialize
+#Start-OSDCloud.windeploy.specialize
