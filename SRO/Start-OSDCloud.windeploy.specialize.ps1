@@ -110,13 +110,17 @@ foreach ($app in $AppsToRemove) {
 }
 
 # 6. Forbered til OOBE
-Write-Host "Specialize configuration. Proceeding to OOBE..." -ForegroundColor Green
 
-Set-ItemProperty -Path "HKLM:\System\Setup" -Name CmdLine -Value 'PowerShell -ExecutionPolicy Bypass -File C:\Windows\System32\OOBE\Start-OOBEDeploy.ps1'
-
-#Set-ItemProperty -Path "HKLM:\System\Setup" -Name CmdLine -Value 'PowerShell -ExecutionPolicy Bypass -Command Start-OSDCloud.windeploy.oobe'
-Start-Process -WorkingDirectory "$env:SystemRoot\System32\OOBE" -FilePath WinDeploy.exe
-
-Write-Host "Specialize configuration complete. Proceeding to OOBE..." -ForegroundColor Green
-
+try {
+	Write-Host "Specialize configuration. Proceeding to OOBE..." -ForegroundColor Green
+	
+	Set-ItemProperty -Path "HKLM:\System\Setup" -Name CmdLine -Value 'PowerShell -ExecutionPolicy Bypass -File C:\Windows\System32\OOBE\Start-OOBEDeploy.ps1'
+	
+	#Set-ItemProperty -Path "HKLM:\System\Setup" -Name CmdLine -Value 'PowerShell -ExecutionPolicy Bypass -Command Start-OSDCloud.windeploy.oobe'
+	Start-Process -WorkingDirectory "$env:SystemRoot\System32\OOBE" -FilePath WinDeploy.exe
+	
+	Write-Host "Specialize configuration complete. Proceeding to OOBE..." -ForegroundColor Green
+} catch {
+    Write-Host "Fejl under forberedelse af OOBE: $_"
+}
 Stop-Transcript
