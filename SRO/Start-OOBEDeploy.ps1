@@ -1,6 +1,9 @@
 [CmdletBinding()]
 param ()
 
+$Global:Transcript = "SRO-OBBE-Phase2.log"
+Start-Transcript -Path (Join-Path "$env:OSDCloud\Logs\" $Global:Transcript) -ErrorAction Ignore
+
 Write-Host "🚀 Starting OOBE configuration..." -ForegroundColor Cyan
 
 # Installer nødvendige moduler
