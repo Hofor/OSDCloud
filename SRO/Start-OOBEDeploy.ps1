@@ -1,8 +1,7 @@
 [CmdletBinding()]
 param ()
 
-$Global:Transcript = "SRO-OBBE-Phase2.log"
-Start-Transcript -Path (Join-Path "$env:OSDCloud\Logs\" $Global:Transcript) -ErrorAction Ignore
+Start-Transcript -Path "C:\OSDCloud\Logs\Start-OOBEDeploy.log" -ErrorAction Ignore
 
 Write-Host "🚀 Starting OOBE configuration..." -ForegroundColor Cyan
 
