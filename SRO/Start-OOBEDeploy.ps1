@@ -3,7 +3,7 @@ param ()
 
 Start-Transcript -Path "C:\OSDCloud\Logs\Start-OOBEDeploy.log" -ErrorAction Ignore
 
-Write-Host "🚀 Starting OOBE configuration..." -ForegroundColor Cyan
+Write-Host "Starting OOBE configuration..." -ForegroundColor Cyan
 
 # Installer nødvendige moduler
 Install-Module OSD -Force
