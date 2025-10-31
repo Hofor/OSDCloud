@@ -18,7 +18,7 @@ $Params = @{
     OSLicense = "Volume"
     ZTI = $true
     Firmware = $false
-    #SkipAutopilot = $true
+    SkipAutopilot = $true
     #SkipODT = $true
 }
 Start-OSDCloud @Params
@@ -30,7 +30,7 @@ Write-Host -ForegroundColor Green "Create C:\ProgramData\OSDeploy\OSDeploy.OOBED
 $OOBEDeployJson = @'
 {
     "AddNetFX3":  {
-                      "IsPresent":  true
+                      "IsPresent":  false
                   },
     "Autopilot":  {
                       "IsPresent":  false
@@ -88,7 +88,7 @@ Set Path = %PATH%;C:\Program Files\WindowsPowerShell\Scripts
 Start /Wait PowerShell -NoL -C Install-Module AutopilotOOBE -Force -Verbose
 Start /Wait PowerShell -NoL -C Install-Module OSD -Force -Verbose
 Start /Wait PowerShell -NoL -C Start-OOBEDeploy
-Start /Wait PowerShell -NoL -C Invoke-WebPSScript https://cleanup.osdcloud.ch
+#Start /Wait PowerShell -NoL -C Invoke-WebPSScript https://cleanup.osdcloud.ch
 Start /Wait PowerShell -NoL -C Restart-Computer -Force
 '@
 
@@ -101,7 +101,7 @@ Write-Host -ForegroundColor Green "Create C:\Windows\Setup\Scripts\SetupComplete
 $SetupCompleteCMD = @'
 PowerShell -NoL -Com Set-ExecutionPolicy RemoteSigned -Force
 Set Path = %PATH%;C:\Program Files\WindowsPowerShell\Scripts
-Start /Wait PowerShell -NoL -C Invoke-WebPSScript https://raw.githubusercontent.com/Hofor/OSDCloud/refs/heads/main/renameDeviceSRO.ps1
+#Start /Wait PowerShell -NoL -C Invoke-WebPSScript https://raw.githubusercontent.com/Hofor/OSDCloud/refs/heads/main/renameDeviceSRO.ps1
 '@
 $SetupCompleteCMD | Out-File -FilePath 'C:\Windows\Setup\Scripts\SetupComplete.cmd' -Encoding ascii -Force
 
