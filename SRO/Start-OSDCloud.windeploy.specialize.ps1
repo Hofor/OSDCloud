@@ -23,6 +23,7 @@ Write-Host "Local admin user '$Username' created"
 #Write-Host "Network profile set to Private"
 
 # 6. Forbered til OOBE
+<#
 try {
 	Write-Host "Specialize configuration. Proceeding to OOBE..." -ForegroundColor Green
 	
@@ -49,4 +50,5 @@ catch
 {
     Write-Host "Fejl under forberedelse af OOBE: $_"
 }
+#>
 Stop-Transcript
