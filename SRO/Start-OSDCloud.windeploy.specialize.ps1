@@ -12,11 +12,11 @@ Write-Host "Renaming computer to $NewComputerName"
 (Get-WmiObject Win32_ComputerSystem).Rename($NewComputerName)
 
 # 2. Opret lokal administratorbruger
-$Username = "SRO-Admin"
-$Password = ConvertTo-SecureString "SRO-ADMIN123456" -AsPlainText -Force
-New-LocalUser -Name $Username -Password $Password -FullName "SRO Local Admin" -Description "Local Admin"
-Add-LocalGroupMember -Group "Administratorer" -Member $Username
-Write-Host "Local admin user '$Username' created"
+#$Username = "SRO-Admin"
+#$Password = ConvertTo-SecureString "SRO-ADMIN123456" -AsPlainText -Force
+#New-LocalUser -Name $Username -Password $Password -FullName "SRO Local Admin" -Description "Local Admin"
+#Add-LocalGroupMember -Group "Administratorer" -Member $Username
+#Write-Host "Local admin user '$Username' created"
 
 # 3. Sæt netværksprofil til privat
 #Get-NetConnectionProfile | Set-NetConnectionProfile -NetworkCategory Private
