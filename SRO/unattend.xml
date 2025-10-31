@@ -15,7 +15,7 @@
           <LocalAccount>
             <Name>Admin</Name>
             <DisplayName>Admin</DisplayName>
-            <Group>Administrators</Group>
+            <Group>Administratorer</Group>
           </LocalAccount>
         </LocalAccounts>
       </UserAccounts>
@@ -34,4 +34,5 @@
     </component>
   </settings>
 </unattend>
+
 
