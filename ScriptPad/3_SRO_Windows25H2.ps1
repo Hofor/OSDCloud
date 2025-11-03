@@ -59,30 +59,15 @@ Write-Host "Starting OSDCloud" -ForegroundColor Green
 write-host "Start-OSDCloud -OSName $OSName -OSEdition $OSEdition -OSActivation $OSActivation -OSLanguage $OSLanguage"
 Start-OSDCloud -OSName $OSName -OSEdition $OSEdition -OSActivation $OSActivation -OSLanguage $OSLanguage -SkipAutopilot -ZTI
 
+write-host "Invoke Copy Start-OSDCloud.windeploy.specialize.ps1"
+Invoke-WebRequest 'https://raw.githubusercontent.com/Hofor/OSDCloud/refs/heads/main/SRO/Start-OSDCloud.windeploy.specialize.ps1' -OutFile "C:\Windows\System32\OOBE\Start-OSDCloud.windeploy.specialize.ps1"
+
+#write-host "Invoke Copy Start-OOBEDeploy.ps1"
+#Invoke-WebRequest 'https://raw.githubusercontent.com/Hofor/OSDCloud/refs/heads/main/SRO/Start-OOBEDeploy.ps1' -OutFile "C:\Windows\System32\OOBE\Start-OOBEDeploy.ps1"
+
+write-host "Set Content In unattend.xml"
+Invoke-WebRequest 'https://raw.githubusercontent.com/Hofor/OSDCloud/refs/heads/main/SRO/unattend.xml' -OutFile "C:\Windows\Panther\unattend.xml"
+
 #Restart Computer from WInPE into Full OS to continue Process
-
-
-write-host "Invoke Copy Start-OSDCloud.windeploy.specialize.ps1"
-Invoke-WebRequest 'https://raw.githubusercontent.com/Hofor/OSDCloud/refs/heads/main/SRO/Start-OSDCloud.windeploy.specialize.ps1' -OutFile "C:\Windows\System32\OOBE\Start-OSDCloud.windeploy.specialize.ps1"
-
-write-host "Invoke Copy Start-OOBEDeploy.ps1"
-Invoke-WebRequest 'https://raw.githubusercontent.com/Hofor/OSDCloud/refs/heads/main/SRO/Start-OOBEDeploy.ps1' -OutFile "C:\Windows\System32\OOBE\Start-OOBEDeploy.ps1"
-
-write-host "Set Content In unattend.xml"
-Invoke-WebRequest 'https://raw.githubusercontent.com/Hofor/OSDCloud/refs/heads/main/SRO/unattend.xml' -OutFile "C:\Windows\Panther\unattend.xml"
-
-write-host "Start-OSDCloud.windeploy.specialize"
-
 restart-computer
-write-host "Invoke Copy Start-OSDCloud.windeploy.specialize.ps1"
-Invoke-WebRequest 'https://raw.githubusercontent.com/Hofor/OSDCloud/refs/heads/main/SRO/Start-OSDCloud.windeploy.specialize.ps1' -OutFile "C:\Windows\System32\OOBE\Start-OSDCloud.windeploy.specialize.ps1"
-
-write-host "Invoke Copy Start-OOBEDeploy.ps1"
-Invoke-WebRequest 'https://raw.githubusercontent.com/Hofor/OSDCloud/refs/heads/main/SRO/Start-OOBEDeploy.ps1' -OutFile "C:\Windows\System32\OOBE\Start-OOBEDeploy.ps1"
-
-write-host "Set Content In unattend.xml"
-Invoke-WebRequest 'https://raw.githubusercontent.com/Hofor/OSDCloud/refs/heads/main/SRO/unattend.xml' -OutFile "C:\Windows\Panther\unattend.xml"
-
-write-host "Start-OSDCloud.windeploy.specialize"
-#Start-OSDCloud.windeploy.specialize
 
