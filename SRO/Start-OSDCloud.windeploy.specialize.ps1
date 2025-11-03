@@ -85,8 +85,7 @@ $AppsToRemove = @(
 		"Microsoft.WindowsNotepad",
 		"Microsoft.WindowsStore",
 		"Microsoft.WindowsTerminal",
-		"MicrosoftCorporationII.QuickAssist",
-		"MicrosoftWindows.Client.WebExperience"
+		"MicrosoftCorporationII.QuickAssist"
 )
 
 Write-Host "Fjern uønskede Inbox Apps" -ForegroundColor Green
