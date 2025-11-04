@@ -98,7 +98,7 @@ foreach ($app in $AppsToRemove) {
 
 # 4. Registry Settings for WSUS:
 Write-Host "Registry Settings for WSUS" -ForegroundColor Green
-new-item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate
+new-item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate"
 
 Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" -Name WUServer -Value 'http://10.209.148.16:8530'
 Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" -Name WUStatusServer -Value 'http://10.209.148.16:8530'
