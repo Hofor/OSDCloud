@@ -108,7 +108,7 @@ Set-location -path c:\windows\system32
 slmgr.vbs /ipk $MakKey
 slmgr.vbs /ato
 
-# 4. Firewall Settings:
+# 6. Firewall Settings:
 write-Host "Firewall Settings" -ForegroundColor Green
 # Åbn outbound TCP port 3389 for privat profil
 New-NetFirewallRule -DisplayName "Allow Outbound TCP 3389 - Private" -Direction Outbound -Protocol TCP -LocalPort 3389 -Action Allow -Profile Private, Domain, Public
@@ -137,21 +137,12 @@ New-NetFirewallRule -DisplayName "Block All Outbound - Domain Profile" -Directio
 write-Host "Block All Outbound - Public Profile" -ForegroundColor Green
 New-NetFirewallRule -DisplayName "Block All Outbound - Public Profile" -Direction Outbound -Action Block -Profile Public -Enabled True -PolicyStore ActiveStore
 
-# 5. Sæt netværksprofil til privat
+# 7. Sæt netværksprofil til privat
 Write-Host "Network profile set to Private"
 Get-NetConnectionProfile | Set-NetConnectionProfile -NetworkCategory Private
 
-
-
-Set-NetFirewallProfile -Profile Domain, Public -Enabled False
-
-
-
-
-
-
-
-
+$temp = Get-NetConnectionProfile
+Write-Host $temp.NetworkCategory
 
 # 6. Forbered til OOBE
 <#
