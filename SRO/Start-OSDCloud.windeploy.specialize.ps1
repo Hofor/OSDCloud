@@ -11,7 +11,7 @@ $NewComputerName = "SRO-FJV-$($Serial)"
 Write-Host "Renaming computer to $NewComputerName"
 (Get-WmiObject Win32_ComputerSystem).Rename($NewComputerName)
 
-# 4. Fjern uønskede Windows Capabilities
+# 2. Fjern uønskede Windows Capabilities
 Write-Host "Fjern uønskede Windows Capabilities" -ForegroundColor Green
 
 $CapabilitiesToRemove = @(
@@ -36,7 +36,7 @@ foreach ($cap in $CapabilitiesToRemove) {
     Remove-WindowsCapability -Online -Name $cap
 }
 
-# 5. Fjern uønskede Inbox Apps
+# 3. Fjern uønskede Inbox Apps
 $AppsToRemove = @(
 		"MSTeams",
         "MicrosoftTeams",
@@ -96,47 +96,62 @@ foreach ($app in $AppsToRemove) {
     Get-AppxProvisionedPackage -Online | Where-Object DisplayName -EQ $app | Remove-AppxProvisionedPackage -Online
 }
 
-# 3. Sæt netværksprofil til privat
-Get-NetConnectionProfile | Set-NetConnectionProfile -NetworkCategory Private
-Write-Host "Network profile set to Private"
-
-Set-NetFirewallProfile -Profile Domain, Public -Enabled False
-
-# Åbn outbound TCP port 3389 for privat profil
-New-NetFirewallRule -DisplayName "Allow Outbound TCP 3389 - Private" -Direction Outbound -Protocol TCP -LocalPort 3389 -Action Allow -Profile Private
-
-# Åbn outbound UDP port 3389 for privat profil
-New-NetFirewallRule -DisplayName "Allow Outbound UDP 3389 - Private" -Direction Outbound -Protocol UDP -LocalPort 3389 -Action Allow -Profile Private
-
-# Åbn outbound TCP port 3850 for privat profil
-New-NetFirewallRule -DisplayName "Allow Outbound TCP 3850 - Private" -Direction Outbound -Protocol TCP -LocalPort 3850 -Action Allow -Profile Private
-
-# Åbn outbound TCP port 3851 for privat profil
-New-NetFirewallRule -DisplayName "Allow Outbound TCP 3851 - Private" -Direction Outbound -Protocol TCP -LocalPort 3851 -Action Allow -Profile Private
-
-#Åben for WSUS
-# Tillad inbound TCP trafik på port 8530 for Private profil
-New-NetFirewallRule -DisplayName "Allow Inbound WSUS 10.209.148.16 TCP 8530 - Private" -Direction Inbound -Protocol TCP -LocalPort 8530 -Action Allow -Profile Private
-
-# Tillad outbound TCP trafik på port 8530 for Private profil
-New-NetFirewallRule -DisplayName "Allow Outbound WSUS to 10.209.148.16 TCP 8530" -Direction Outbound -Protocol TCP -RemoteAddress 10.209.148.16 -RemotePort 8530 -Action Allow -Profile Private
-
-Write-Host "Specialize configuration. Proceeding to OOBE..." -ForegroundColor Green
+# 4. Registry Settings for WSUS:
+Write-Host "Registry Settings for WSUS" -ForegroundColor Green
 Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" -Name WUServer -Value 'http://10.209.148.16:8530'
 Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" -Name WUStatusServer -Value 'http://10.209.148.16:8530'
 
+# 5. Registry Settings for WSUS:
 Write-Host "Set MAK Key..." -ForegroundColor Green
-
-# Erstat XXXXX-XXXXX-XXXXX-XXXXX-XXXXX med din MAK-nøgle
 $MakKey = "G2NRJ-VRWY2-8PVPR-R6T46-V6DF4"
-
 Set-location -path c:\windows\system32
-
-# Sæt produktnøglen
 slmgr.vbs /ipk $MakKey
-
-# Aktivér Windows
 slmgr.vbs /ato
+
+# 4. Firewall Settings:
+write-Host "Firewall Settings" -ForegroundColor Green
+# Åbn outbound TCP port 3389 for privat profil
+New-NetFirewallRule -DisplayName "Allow Outbound TCP 3389 - Private" -Direction Outbound -Protocol TCP -LocalPort 3389 -Action Allow -Profile Private, Domain, Public
+
+# Åbn outbound UDP port 3389 for privat profil
+New-NetFirewallRule -DisplayName "Allow Outbound UDP 3389 - Private" -Direction Outbound -Protocol UDP -LocalPort 3389 -Action Allow -Profile Private, Domain, Public
+
+# Åbn outbound TCP port 3850 for privat profil
+New-NetFirewallRule -DisplayName "Allow Outbound TCP 3850 - Private" -Direction Outbound -Protocol TCP -LocalPort 3850 -Action Allow -Profile Private, Domain, Public
+
+# Åbn outbound TCP port 3851 for privat profil
+New-NetFirewallRule -DisplayName "Allow Outbound TCP 3851 - Private" -Direction Outbound -Protocol TCP -LocalPort 3851 -Action Allow -Profile Private, Domain, Public
+
+#Åben for WSUS
+# Tillad inbound TCP trafik på port 8530 for Private profil
+New-NetFirewallRule -DisplayName "Allow Inbound WSUS 10.209.148.16 TCP 8530 - Private" -Direction Inbound -Protocol TCP -LocalPort 8530 -Action Allow -Profile Private, Domain, Public
+
+# Tillad outbound TCP trafik på port 8530 for Private profil
+New-NetFirewallRule -DisplayName "Allow Outbound WSUS to 10.209.148.16 TCP 8530" -Direction Outbound -Protocol TCP -RemoteAddress 10.209.148.16 -RemotePort 8530 -Action Allow -Profile Private, Domain, Public
+
+#Block alle inbound og outbound trafik
+write-Host "Block All Outbound - Domain Profile" -ForegroundColor Green
+New-NetFirewallRule -DisplayName "Block All Outbound - Domain Profile" -Direction Outbound -Action Block -Profile Domain -Enabled True -PolicyStore ActiveStore
+
+#Block alle inbound og outbound trafik
+write-Host "Block All Outbound - Public Profile" -ForegroundColor Green
+New-NetFirewallRule -DisplayName "Block All Outbound - Public Profile" -Direction Outbound -Action Block -Profile Public -Enabled True -PolicyStore ActiveStore
+
+# 5. Sæt netværksprofil til privat
+Write-Host "Network profile set to Private"
+Get-NetConnectionProfile | Set-NetConnectionProfile -NetworkCategory Private
+
+
+
+Set-NetFirewallProfile -Profile Domain, Public -Enabled False
+
+
+
+
+
+
+
+
 
 # 6. Forbered til OOBE
 <#
