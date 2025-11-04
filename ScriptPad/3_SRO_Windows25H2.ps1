@@ -62,9 +62,6 @@ Start-OSDCloud -OSName $OSName -OSEdition $OSEdition -OSActivation $OSActivation
 write-host "Invoke Copy Start-OSDCloud.windeploy.specialize.ps1"
 Invoke-WebRequest 'https://raw.githubusercontent.com/Hofor/OSDCloud/refs/heads/main/SRO/Start-OSDCloud.windeploy.specialize.ps1' -OutFile "C:\Windows\System32\OOBE\Start-OSDCloud.windeploy.specialize.ps1"
 
-#write-host "Invoke Copy Start-OOBEDeploy.ps1"
-#Invoke-WebRequest 'https://raw.githubusercontent.com/Hofor/OSDCloud/refs/heads/main/SRO/Start-OOBEDeploy.ps1' -OutFile "C:\Windows\System32\OOBE\Start-OOBEDeploy.ps1"
-
 write-host "Set Content In unattend.xml"
 Invoke-WebRequest 'https://raw.githubusercontent.com/Hofor/OSDCloud/refs/heads/main/SRO/unattend.xml' -OutFile "C:\Windows\Panther\unattend.xml"
 
@@ -130,10 +127,9 @@ Write-Host -ForegroundColor Green "Create C:\Windows\Setup\Scripts\SetupComplete
 $SetupCompleteCMD = @'
 PowerShell -NoL -Com Set-ExecutionPolicy RemoteSigned -Force
 Set Path = %PATH%;C:\Program Files\WindowsPowerShell\Scripts
-#Start /Wait PowerShell -NoL -C Invoke-WebPSScript https://raw.githubusercontent.com/Hofor/OSDCloud/refs/heads/main/renameDeviceSRO.ps1
+Start /Wait PowerShell -NoL -C Invoke-WebPSScript https://raw.githubusercontent.com/Hofor/OSDCloud/refs/heads/main/scripts/cleanupOSD.ps1
 '@
 $SetupCompleteCMD | Out-File -FilePath 'C:\Windows\Setup\Scripts\SetupComplete.cmd' -Encoding ascii -Force
-
 
 #Restart Computer from WInPE into Full OS to continue Process
 restart-computer
