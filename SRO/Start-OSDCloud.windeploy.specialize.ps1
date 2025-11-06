@@ -101,12 +101,6 @@ new-item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate"
 Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" -Name WUServer -Value 'http://10.209.148.16:8530'
 Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" -Name WUStatusServer -Value 'http://10.209.148.16:8530'
 
-# 5. Registry Settings for WSUS:
-#Write-Host "Set MAK Key..." -ForegroundColor Green
-#Start-Process -FilePath "c:\windows\system32\slmgr.vbs" -ArgumentList "/ipk G2NRJ-VRWY2-8PVPR-R6T46-V6DF4"
-#Start-Process -FilePath "c:\windows\system32\slmgr.vbs" -ArgumentList "/ato"
-#Set-location -path c:\windows\system32
-
 # 6. Firewall Settings:
 write-Host "Firewall Settings" -ForegroundColor Green
 # Åbn outbound TCP port 3389 for privat profil
