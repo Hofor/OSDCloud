@@ -105,7 +105,7 @@ Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate"
 Write-Host "Set MAK Key..." -ForegroundColor Green
 Start-Process -FilePath "c:\windows\system32\slmgr.vbs" -ArgumentList "/ipk G2NRJ-VRWY2-8PVPR-R6T46-V6DF4"
 Start-Process -FilePath "c:\windows\system32\slmgr.vbs" -ArgumentList "/ato"
-Set-location -path c:\windows\system32
+#Set-location -path c:\windows\system32
 
 # 6. Firewall Settings:
 write-Host "Firewall Settings" -ForegroundColor Green
@@ -133,19 +133,19 @@ write-Host "Block All Outbound - Domain Profile" -ForegroundColor Green
 Set-NetFirewallProfile -DefaultInboundAction Block -DefaultOutboundAction block -NotifyOnListen False -AllowUnicastResponseToMulticast True  -Profile Domain
 
 #Block alle og outbound trafik
-write-Host "Block All Outbound - Public Profile" -ForegroundColor Green
-Set-NetFirewallProfile -DefaultInboundAction Block -DefaultOutboundAction block -NotifyOnListen False -AllowUnicastResponseToMulticast True  -Profile Public
+write-Host "Block All Outbound - Private Profile" -ForegroundColor Green
+Set-NetFirewallProfile -DefaultInboundAction Block -DefaultOutboundAction block -NotifyOnListen False -AllowUnicastResponseToMulticast True  -Profile Private
 
 #New-NetFirewallRule -DisplayName "Block All Outbound - Public Profile" -Direction Outbound -Action Block -Profile Public -Enabled True -PolicyStore ActiveStore
 #New-NetFirewallRule -DisplayName "Block All Outbound - Domain Profile" -Direction Outbound -Action Block -Profile Domain -Enabled True -PolicyStore ActiveStore
 #Set-NetFirewallProfile -DefaultInboundAction Block -DefaultOutboundAction block -NotifyOnListen False -AllowUnicastResponseToMulticast True  -Profile Domain
 
 # 7. Sæt netværksprofil til privat
-Write-Host "Network profile set to Private"
-Get-NetConnectionProfile | Set-NetConnectionProfile -NetworkCategory Private
+#Write-Host "Network profile set to Private"
+#Get-NetConnectionProfile | Set-NetConnectionProfile -NetworkCategory Private
 
 $temp = Get-NetConnectionProfile
-Write-Host $temp.NetworkCategory
+#Write-Host $temp.NetworkCategory
 
 # 6. Forbered til OOBE
 <#
