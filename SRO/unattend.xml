@@ -13,8 +13,8 @@
       <UserAccounts>
         <LocalAccounts>
           <LocalAccount>
-            <Name>SRO-Admin</Name>
-            <DisplayName>SRO-Admin</DisplayName>
+            <Name>SRO-FJV-Admin</Name>
+            <DisplayName>SRO-FJV-Admin</DisplayName>
             <Group>Administratorer</Group>
           </LocalAccount>
         </LocalAccounts>
@@ -34,6 +34,7 @@
     </component>
   </settings>
 </unattend>
+
 
 
 
