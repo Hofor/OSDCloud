@@ -126,9 +126,11 @@ $OOBEDeployJson | Out-File -FilePath "C:\ProgramData\OSDeploy\OSDeploy.OOBEDeplo
 <#
 Write-Host -ForegroundColor Green "Create C:\Windows\Setup\Scripts\SetupComplete.cmd"
 $SetupCompleteCMD = @'
-PowerShell -NoL -Com Set-ExecutionPolicy RemoteSigned -Force
-Set Path = %PATH%;C:\Program Files\WindowsPowerShell\Scripts
-Start /Wait PowerShell -NoL -C Invoke-WebPSScript https://raw.githubusercontent.com/Hofor/OSDCloud/refs/heads/main/scripts/cleanupOSD.ps1
+cscript c:\windows\system32\slmgr.vbs /ipk G2NRJ-VRWY2-8PVPR-R6T46-V6DF4
+cscript c:\windows\system32\slmgr.vbs /ato
+#PowerShell -NoL -Com Set-ExecutionPolicy RemoteSigned -Force
+#Set Path = %PATH%;C:\Program Files\WindowsPowerShell\Scripts
+#Start /Wait PowerShell -NoL -C Invoke-WebPSScript https://raw.githubusercontent.com/Hofor/OSDCloud/refs/heads/main/scripts/cleanupOSD.ps1
 '@
 $SetupCompleteCMD | Out-File -FilePath 'C:\Windows\Setup\Scripts\SetupComplete.cmd' -Encoding ascii -Force
 #>
