@@ -20,9 +20,7 @@ $CapabilitiesToRemove = @(
     "Microsoft.Windows.WordPad~~~~0.0.1.0",
 	"OneCoreUAP.OneSync~~~~0.0.1.0",
 	"Print.Management.Console~~~~0.0.1.0",
-	"VBSCRIPT~~~~",
 	"Media.WindowsMediaPlayer~~~~0.0.12.0",
-	"Microsoft.Windows.PowerShell.ISE",
 	"Microsoft.Wallpapers.Extended",
 	"MathRecognizer~~~~0.0.1.0",
 	"Language.TextToSpeech~~~da-DK~0.0.1.0",
@@ -130,17 +128,21 @@ New-NetFirewallRule -DisplayName "Allow Inbound WSUS 10.209.148.16 TCP 8530 - Pr
 # Tillad outbound TCP trafik på port 8530 for Private profil
 New-NetFirewallRule -DisplayName "Allow Outbound WSUS to 10.209.148.16 TCP 8530" -Direction Outbound -Protocol TCP -RemoteAddress 10.209.148.16 -RemotePort 8530 -Action Allow -Profile Private, Domain, Public
 
-#Block alle inbound og outbound trafik
+#Block alle outbound trafik
 write-Host "Block All Outbound - Domain Profile" -ForegroundColor Green
-New-NetFirewallRule -DisplayName "Block All Outbound - Domain Profile" -Direction Outbound -Action Block -Profile Domain -Enabled True -PolicyStore ActiveStore
+Set-NetFirewallProfile -DefaultInboundAction Block -DefaultOutboundAction block -NotifyOnListen False -AllowUnicastResponseToMulticast True  -Profile Domain
 
-#Block alle inbound og outbound trafik
+#Block alle og outbound trafik
 write-Host "Block All Outbound - Public Profile" -ForegroundColor Green
-New-NetFirewallRule -DisplayName "Block All Outbound - Public Profile" -Direction Outbound -Action Block -Profile Public -Enabled True -PolicyStore ActiveStore
+Set-NetFirewallProfile -DefaultInboundAction Block -DefaultOutboundAction block -NotifyOnListen False -AllowUnicastResponseToMulticast True  -Profile Public
+
+#New-NetFirewallRule -DisplayName "Block All Outbound - Public Profile" -Direction Outbound -Action Block -Profile Public -Enabled True -PolicyStore ActiveStore
+#New-NetFirewallRule -DisplayName "Block All Outbound - Domain Profile" -Direction Outbound -Action Block -Profile Domain -Enabled True -PolicyStore ActiveStore
+#Set-NetFirewallProfile -DefaultInboundAction Block -DefaultOutboundAction block -NotifyOnListen False -AllowUnicastResponseToMulticast True  -Profile Domain
 
 # 7. Sæt netværksprofil til privat
 Write-Host "Network profile set to Private"
-#Get-NetConnectionProfile | Set-NetConnectionProfile -NetworkCategory Private
+Get-NetConnectionProfile | Set-NetConnectionProfile -NetworkCategory Private
 
 $temp = Get-NetConnectionProfile
 Write-Host $temp.NetworkCategory
