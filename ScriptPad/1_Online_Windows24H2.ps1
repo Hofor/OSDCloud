@@ -59,13 +59,6 @@ Write-Host "Starting OSDCloud" -ForegroundColor Green
 write-host "Start-OSDCloud -OSName $OSName -OSEdition $OSEdition -OSActivation $OSActivation -OSLanguage $OSLanguage"
 Start-OSDCloud -OSName $OSName -OSEdition $OSEdition -OSActivation $OSActivation -OSLanguage $OSLanguage -SkipAutopilot -ZTI
 
-<#This is now native in OSDCloud
-write-host "OSDCloud Process Complete, Running Custom Actions Before Reboot" -ForegroundColor Green
-if (Test-DISMFromOSDCloudUSB){
-    Start-DISMFromOSDCloudUSB
-}
-#>
-
 #================================================
 #  [PostOS] OOBEDeploy Configuration
 #================================================
@@ -76,29 +69,18 @@ $OOBEDeployJson = @'
                       "IsPresent":  true
                   },
     "Autopilot":  {
-                      "IsPresent":  false
+                      "IsPresent":  true
                   },
     "RemoveAppx":  [
                     "MSTeams",
                     "MicrosoftTeams",
-                    "Microsoft.BingWeather",
                     "Microsoft.BingNews",
                     "Microsoft.GamingApp",
-                    "Microsoft.GetHelp",
                     "Microsoft.Getstarted",
-                    "Microsoft.Messaging",
                     "Microsoft.MicrosoftOfficeHub",
                     "Microsoft.MicrosoftSolitaireCollection",
-                    "Microsoft.MicrosoftStickyNotes",
-                    "Microsoft.MSPaint",
-                    "Microsoft.People",
                     "Microsoft.PowerAutomateDesktop",
-                    "Microsoft.StorePurchaseApp",
-                    "Microsoft.Todos",
-                    "microsoft.windowscommunicationsapps",
-                    "Microsoft.WindowsFeedbackHub",
-                    "Microsoft.WindowsMaps",
-                    "Microsoft.WindowsSoundRecorder",
+                    "Microsoft.WindowsFeedbackHub",        
                     "Microsoft.Xbox.TCUI",
                     "Microsoft.XboxGameOverlay",
                     "Microsoft.XboxGamingOverlay",
@@ -106,7 +88,7 @@ $OOBEDeployJson = @'
                     "Microsoft.XboxSpeechToTextOverlay",
                     "Microsoft.YourPhone",
                     "Microsoft.ZuneMusic",
-                    "Microsoft.ZuneVideo"
+                    "Microsoft.ZuneVideo"                  
                    ],
     "UpdateDrivers":  {
                           "IsPresent":  true
@@ -120,6 +102,18 @@ If (!(Test-Path "C:\ProgramData\OSDeploy")) {
     New-Item "C:\ProgramData\OSDeploy" -ItemType Directory -Force | Out-Null
 }
 $OOBEDeployJson | Out-File -FilePath "C:\ProgramData\OSDeploy\OSDeploy.OOBEDeploy.json" -Encoding ascii -Force
+
+#================================================
+#  [PostOS] SetupComplete CMD Command Line
+#================================================
+
+Write-Host -ForegroundColor Green "Create C:\Windows\Setup\Scripts\SetupComplete.cmd"
+$SetupCompleteCMD = @'
+PowerShell -NoL -Com Set-ExecutionPolicy RemoteSigned -Force
+Set Path = %PATH%;C:\Program Files\WindowsPowerShell\Scripts
+Start /Wait PowerShell -NoL -C Invoke-WebPSScript https://raw.githubusercontent.com/Hofor/OSDCloud/refs/heads/main/scripts/cleanupOSD.ps1
+'@
+$SetupCompleteCMD | Out-File -FilePath 'C:\Windows\Setup\Scripts\SetupComplete.cmd' -Encoding ascii -Force
 
 #Restart Computer from WInPE into Full OS to continue Process
 restart-computer
