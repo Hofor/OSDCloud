@@ -101,6 +101,8 @@ new-item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate"
 Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" -Name WUServer -Value 'http://10.209.148.16:8530'
 Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" -Name WUStatusServer -Value 'http://10.209.148.16:8530'
 
+Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\USBSTOR" -Name Start -Value 4
+
 # 6. Firewall Settings:
 write-Host "Firewall Settings" -ForegroundColor Green
 # Åbn outbound TCP port 3389 for privat profil
