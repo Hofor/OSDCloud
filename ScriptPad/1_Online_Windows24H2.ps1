@@ -61,4 +61,4 @@ Start-OSDCloud -OSName $OSName -OSEdition $OSEdition -OSActivation $OSActivation
 
 
 #Restart Computer from WInPE into Full OS to continue Process
-restart-computer
+#restart-computer
