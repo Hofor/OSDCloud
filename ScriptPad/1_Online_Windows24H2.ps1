@@ -97,23 +97,24 @@ $OOBEDeployJson = @'
                           "IsPresent":  true
                       }
 }
-'@
-If (!(Test-Path "C:\ProgramData\OSDeploy")) {
-    New-Item "C:\ProgramData\OSDeploy" -ItemType Directory -Force | Out-Null
-}
-$OOBEDeployJson | Out-File -FilePath "C:\ProgramData\OSDeploy\OSDeploy.OOBEDeploy.json" -Encoding ascii -Force
+<#
+#'@
+#If (!(Test-Path "C:\ProgramData\OSDeploy")) {
+#    New-Item "C:\ProgramData\OSDeploy" -ItemType Directory -Force | Out-Null
+#}
+#$OOBEDeployJson | Out-File -FilePath "C:\ProgramData\OSDeploy\OSDeploy.OOBEDeploy.json" -Encoding ascii -Force
 
 #================================================
 #  [PostOS] SetupComplete CMD Command Line
 #================================================
 
-Write-Host -ForegroundColor Green "Create C:\Windows\Setup\Scripts\SetupComplete.cmd"
-$SetupCompleteCMD = @'
-PowerShell -NoL -Com Set-ExecutionPolicy RemoteSigned -Force
-Set Path = %PATH%;C:\Program Files\WindowsPowerShell\Scripts
-Start /Wait PowerShell -NoL -C Invoke-WebPSScript https://raw.githubusercontent.com/Hofor/OSDCloud/refs/heads/main/scripts/cleanupOSD.ps1
-'@
-$SetupCompleteCMD | Out-File -FilePath 'C:\Windows\Setup\Scripts\SetupComplete.cmd' -Encoding ascii -Force
-
+#Write-Host -ForegroundColor Green "Create C:\Windows\Setup\Scripts\SetupComplete.cmd"
+#$SetupCompleteCMD = @'
+#PowerShell -NoL -Com Set-ExecutionPolicy RemoteSigned -Force
+#Set Path = %PATH%;C:\Program Files\WindowsPowerShell\Scripts
+#Start /Wait PowerShell -NoL -C Invoke-WebPSScript https://raw.githubusercontent.com/Hofor/OSDCloud/refs/heads/main/scripts/cleanupOSD.ps1
+#'@
+#$SetupCompleteCMD | Out-File -FilePath 'C:\Windows\Setup\Scripts\SetupComplete.cmd' -Encoding ascii -Force
+#>
 #Restart Computer from WInPE into Full OS to continue Process
 restart-computer
