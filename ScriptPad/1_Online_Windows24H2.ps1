@@ -32,7 +32,18 @@ $Global:MyOSDCloud = [ordered]@{
 
 #Region Determine if using native driver packs, or if I want to use extracted drivers on OSDCloudUSB
 $Product = (Get-MyComputerProduct)
+
+write-host $Product
+
 $DriverPack = Get-OSDCloudDriverPack -Product $Product -OSVersion $OSVersion -OSReleaseID $OSReleaseID
+
+write-host $DriverPack 
+
+if($Product -contains "HP EleteBook 8 G1i 16 inch Notebook AI PC")
+{
+    $NewProduct = "HP EleteBook 8 G1i 14 inch Notebook AI PC"
+    $DriverPack = Get-OSDCloudDriverPack -Product $NewProduct -OSVersion $OSVersion -OSReleaseID $OSReleaseID
+}
 
 if ($DriverPack){
     $Global:MyOSDCloud.DriverPackName = $DriverPack.Name
