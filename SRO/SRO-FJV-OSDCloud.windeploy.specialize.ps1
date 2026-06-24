@@ -203,10 +203,6 @@ $RdpPath = "HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\R
 Set-ItemProperty -Path $RdpPath -Name "UserAuthentication" -Value 0
 
 # (Valgfrit, men ofte nødvendigt) Sørg for RDP er aktiveret
-#Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server" -Name "fDenyTSConnections" -Value 0
-
-# Genstart RDP-service
-#Restart-Service -Name TermService -Force
-
+Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server" -Name "fDenyTSConnections" -Value 0
 
 Stop-Transcript
