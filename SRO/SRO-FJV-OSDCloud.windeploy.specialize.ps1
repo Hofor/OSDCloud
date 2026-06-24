@@ -140,7 +140,7 @@ Set-NetFirewallProfile -DefaultInboundAction Block -DefaultOutboundAction block 
 #Write-Host "Network profile set to Private"
 #Get-NetConnectionProfile | Set-NetConnectionProfile -NetworkCategory Private
 
-$temp = Get-NetConnectionProfile
+#$temp = Get-NetConnectionProfile
 #Write-Host $temp.NetworkCategory
 
 # 6. Forbered til OOBE
@@ -172,23 +172,27 @@ catch
     Write-Host "Fejl under forberedelse af OOBE: $_"
 }
 #>
-# 8. Power Management Settings (No sleep / disk never off)
-Write-Host "Configuring Power Settings (No sleep, disks always on)" -ForegroundColor Green
 
-# Sæt aktiv power plan til High Performance
+# 8. Power Management Settings (No sleep / disk never off / display always on)
+Write-Host "Configuring Power Settings (No sleep, disks and display always on)" -ForegroundColor Green
+
+# Sæt High Performance plan
 powercfg -setactive SCHEME_MIN
 
-# Deaktiver sleep (AC og DC)
+# Disable sleep (AC + DC)
 powercfg -change -standby-timeout-ac 0
 powercfg -change -standby-timeout-dc 0
 
-# Deaktiver hibernate
+# Disable hibernate
 powercfg -hibernate off
 
-# Sæt harddisk timeout til aldrig (0 minutter)
+# Harddisk slukker aldrig
 powercfg -change -disk-timeout-ac 0
 powercfg -change -disk-timeout-dc 0
 
+# Skærm slukker ALDRIG
+powercfg -change -monitor-timeout-ac 0
+powercfg -change -monitor-timeout-dc 0
 
 # 9. Disable Network Level Authentication (NLA)
 Write-Host "Disabling Network Level Authentication (NLA)" -ForegroundColor Green
