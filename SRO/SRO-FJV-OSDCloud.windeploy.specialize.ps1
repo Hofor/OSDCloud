@@ -172,4 +172,37 @@ catch
     Write-Host "Fejl under forberedelse af OOBE: $_"
 }
 #>
+# 8. Power Management Settings (No sleep / disk never off)
+Write-Host "Configuring Power Settings (No sleep, disks always on)" -ForegroundColor Green
+
+# Sæt aktiv power plan til High Performance
+powercfg -setactive SCHEME_MIN
+
+# Deaktiver sleep (AC og DC)
+powercfg -change -standby-timeout-ac 0
+powercfg -change -standby-timeout-dc 0
+
+# Deaktiver hibernate
+powercfg -hibernate off
+
+# Sæt harddisk timeout til aldrig (0 minutter)
+powercfg -change -disk-timeout-ac 0
+powercfg -change -disk-timeout-dc 0
+
+
+# 9. Disable Network Level Authentication (NLA)
+Write-Host "Disabling Network Level Authentication (NLA)" -ForegroundColor Green
+
+$RdpPath = "HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp"
+
+# Slå NLA fra
+Set-ItemProperty -Path $RdpPath -Name "UserAuthentication" -Value 0
+
+# (Valgfrit, men ofte nødvendigt) Sørg for RDP er aktiveret
+Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server" -Name "fDenyTSConnections" -Value 0
+
+# Genstart RDP-service
+Restart-Service -Name TermService -Force
+
+
 Stop-Transcript
