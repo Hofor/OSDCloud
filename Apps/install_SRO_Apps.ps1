@@ -6,8 +6,9 @@ Write-Host "Execute OSD Cloud App Install Script" -ForegroundColor Green
 $msiPath = $null
 $mstPath = $null
 
-# Scan alle relevante drevbogstaver
-foreach ($letter in 'C'..'Z') {
+# Scan alle drevbogstaver robust
+foreach ($letter in [char]'C'..[char]'Z') {
+
     $msiTest = "$letter`:\OSDCloud\Apps\ADSelfServicePlusClientSoftware.msi"
     $mstTest = "$letter`:\OSDCloud\Apps\ADSelfServicePlusClientSoftware.mst"
 
@@ -23,7 +24,7 @@ foreach ($letter in 'C'..'Z') {
     }
 }
 
-# Stop hvis ikke MSI findes
+# Stop hvis MSI ikke findes
 if (-not $msiPath) {
     Write-Host "MSI ikke fundet på nogen drev!" -ForegroundColor Red
     exit 1
@@ -37,7 +38,7 @@ if ($mstPath) {
     Write-Host "MST ikke fundet - fortsætter uden transform" -ForegroundColor Yellow
 }
 
-# Byg argumentliste dynamisk
+# Byg argumenter
 $arguments = "/i `"$msiPath`" /qn /norestart"
 
 if ($mstPath) {
