@@ -5,8 +5,13 @@ Write-Host "Execute OSD Cloud App Install Script" -ForegroundColor Green
 
 $usb = Get-Volume | Where-Object { Test-Path "$($_.DriveLetter):\OSDCloud\Apps\ADSelfServicePlusClientSoftware.msi" } | Select-Object -First 1
 
+Write-Host $usb
+
 $msi = "$($usb.DriveLetter):\OSDCloud\Apps\ADSelfServicePlusClientSoftware.msi"
 $mst = "$($usb.DriveLetter):\OSDCloud\Apps\ADSelfServicePlusClientSoftware.mst"
+
+Write-Host $msi
+Write-Host $mst
 
 Start-Process msiexec.exe -ArgumentList "/i `"$msi`" TRANSFORMS=`"$mst`" /qn /norestart" -Wait -NoNewWind -PassThru
 
