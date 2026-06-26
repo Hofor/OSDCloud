@@ -59,7 +59,7 @@ Write-Host "Starting OSDCloud" -ForegroundColor Green
 write-host "Start-OSDCloud -OSName $OSName -OSEdition $OSEdition -OSActivation $OSActivation -OSLanguage $OSLanguage"
 Start-OSDCloud -OSName $OSName -OSEdition $OSEdition -OSActivation $OSActivation -OSLanguage $OSLanguage -SkipAutopilot -ZTI
 
-write-host "Invoke Copy Start-OSDCloud.windeploy.specialize.ps1"
+write-host "Invoke Copy install_SRO_Apps.ps1"
 Invoke-WebRequest 'https://raw.githubusercontent.com/Hofor/OSDCloud/refs/heads/main/Apps/install_SRO_Apps.ps1' -OutFile "C:\Windows\System32\OOBE\install_SRO_Apps.ps1"
 
 write-host "Invoke Copy Start-OSDCloud.windeploy.specialize.ps1"
