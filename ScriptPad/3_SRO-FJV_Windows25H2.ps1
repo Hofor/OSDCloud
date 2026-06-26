@@ -29,7 +29,7 @@ $Global:MyOSDCloud = [ordered]@{
     SyncMSUpCatDriverUSB = [bool]$true
     CheckSHA1 = [bool]$true
 }
-
+ 
 #Region Determine if using native driver packs, or if I want to use extracted drivers on OSDCloudUSB
 $Product = (Get-MyComputerProduct)
 $DriverPack = Get-OSDCloudDriverPack -Product $Product -OSVersion $OSVersion -OSReleaseID $OSReleaseID
