@@ -94,6 +94,7 @@ foreach ($app in $AppsToRemove) {
     Get-AppxProvisionedPackage -Online | Where-Object DisplayName -EQ $app | Remove-AppxProvisionedPackage -Online
 }
 
+# Installer App ADSelfServicePlusClientSoftware
 Write-Host "Execute ADSelfServicePlusClientSoftware App Install" -ForegroundColor Green
 
 $msiPath = $null
