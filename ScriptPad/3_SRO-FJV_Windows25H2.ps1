@@ -62,18 +62,22 @@ Start-OSDCloud -OSName $OSName -OSEdition $OSEdition -OSActivation $OSActivation
 # Tester app installation - kopiere ned lokalt
 Write-Host "Caching apps locally..." -ForegroundColor Cyan
 
-$dest = "C:\OSDCache"
+$dest = "$env:SystemDrive\OSDCache"
 
 foreach ($letter in 'D'..'Z') {
+
     $source = "$letter`:\OSDCloud\Apps"
 
     if (Test-Path $source) {
+
         New-Item -Path $dest -ItemType Directory -Force | Out-Null
         Copy-Item "$source\*" $dest -Recurse -Force
+
         Write-Host "Copied apps from $letter to $dest"
         break
     }
 }
+
 
 write-host "Invoke Copy Start-OSDCloud.windeploy.specialize.ps1"
 Invoke-WebRequest 'https://raw.githubusercontent.com/Hofor/OSDCloud/refs/heads/main/SRO/SRO-FJV-OSDCloud.windeploy.specialize.ps1' -OutFile "C:\Windows\System32\OOBE\Start-OSDCloud.windeploy.specialize.ps1"
