@@ -55,23 +55,22 @@ else
 Write-Output $Global:MyOSDCloud
 
 # Tester app installation - kopiere ned lokalt
-Write-Host "Caching apps locally..." -ForegroundColor Cyan
+Write-Host "Caching apps locally BEFORE OSDCloud..." -ForegroundColor Cyan
 
 $dest = "$env:SystemDrive\OSDCache"
 
-foreach ($letter in 'D'..'Z') {
+foreach ($letter in [char]'D'..[char]'Z') {
 
     $source = "$letter`:\OSDCloud\Apps"
 
     if (Test-Path $source) {
-
         New-Item -Path $dest -ItemType Directory -Force | Out-Null
         Copy-Item "$source\*" $dest -Recurse -Force
-
         Write-Host "Copied apps from $letter to $dest"
         break
     }
 }
+
 
 #Launch OSDCloud
 Write-Host "Starting OSDCloud" -ForegroundColor Green
