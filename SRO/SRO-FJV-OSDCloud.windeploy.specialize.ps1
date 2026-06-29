@@ -94,13 +94,13 @@ foreach ($app in $AppsToRemove) {
     Get-AppxProvisionedPackage -Online | Where-Object DisplayName -EQ $app | Remove-AppxProvisionedPackage -Online
 }
 
+
 # Installer App ADSelfServicePlusClientSoftware
 Write-Host "Execute ADSelfServicePlusClientSoftware App Install" -ForegroundColor Green
 
 $msiPath = $null
 $mstPath = $null
 
-# Scan alle drevbogstaver robust
 foreach ($letter in [char]'C'..[char]'Z') {
 
     $msiTest = "$letter`:\OSDCloud\Apps\ADSelfServicePlusClientSoftware.msi"
@@ -118,31 +118,32 @@ foreach ($letter in [char]'C'..[char]'Z') {
     }
 }
 
-# Stop hvis MSI ikke findes
-if (-not $msiPath) {
-    Write-Host "MSI ikke fundet på nogen drev!" -ForegroundColor Red
-    exit 1
+if ($msiPath) {
+
+    Write-Host "MSI: $msiPath"
+
+    if ($mstPath) {
+        Write-Host "MST: $mstPath"
+        $arguments = "/i `"$msiPath`" TRANSFORMS=`"$mstPath`" /qn /norestart"
+    }
+    else {
+        Write-Host "MST ikke fundet - fortsætter uden transform" -ForegroundColor Yellow
+        $arguments = "/i `"$msiPath`" /qn /norestart"
+    }
+
+    try {
+        Start-Process msiexec.exe -ArgumentList $arguments -Wait -NoNewWindow
+        Write-Host "ADSelfServicePlusClientSoftware Installation completed"
+    }
+    catch {
+        Write-Host "Installation fejlede, men script fortsætter: $_" -ForegroundColor Yellow
+    }
+
+}
+else {
+    Write-Host "MSI ikke fundet – springer installation over" -ForegroundColor Yellow
 }
 
-Write-Host "MSI: $msiPath"
-
-if ($mstPath) {
-    Write-Host "MST: $mstPath"
-} else {
-    Write-Host "MST ikke fundet - fortsætter uden transform" -ForegroundColor Yellow
-}
-
-# Byg argumenter
-$arguments = "/i `"$msiPath`" /qn /norestart"
-
-if ($mstPath) {
-    $arguments = "/i `"$msiPath`" TRANSFORMS=`"$mstPath`" /qn /norestart"
-}
-
-# Kør installation
-Start-Process msiexec.exe -ArgumentList $arguments -Wait -NoNewWindow
-
-Write-Host "ADSelfServicePlusClientSoftware Installation completed"
 
 # 4. Registry Settings for WSUS:
 Write-Host "Registry Settings for WSUS" -ForegroundColor Green
