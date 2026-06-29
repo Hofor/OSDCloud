@@ -57,9 +57,10 @@ Write-Output $Global:MyOSDCloud
 
 # Tester app installation - kopiere ned lokalt
 Write-Host "Caching apps locally BEFORE OSDCloud..." -ForegroundColor Cyan
-$CopyToWindows = @{
-    "C:\OSDCache" = "OSDCloud\Apps"
-}
+$CopyToWindows = @(
+    "OSDCloud\Apps\* C:\OSDCache"
+)
+
 
 #Launch OSDCloud
 Write-Host "Starting OSDCloud" -ForegroundColor Green
