@@ -94,63 +94,14 @@ foreach ($app in $AppsToRemove) {
     Get-AppxProvisionedPackage -Online | Where-Object DisplayName -EQ $app | Remove-AppxProvisionedPackage -Online
 }
 
-
-# Installer App ADSelfServicePlusClientSoftware
-Write-Host "Execute ADSelfServicePlusClientSoftware App Install" -ForegroundColor Green
-
-$msiPath = $null
-$mstPath = $null
-
-foreach ($letter in [char]'C'..[char]'Z') {
-
-    $msiTest = "$letter`:\OSDCloud\Apps\ADSelfServicePlusClientSoftware.msi"
-    $mstTest = "$letter`:\OSDCloud\Apps\ADSelfServicePlusClientSoftware.mst"
-
-    if (Test-Path $msiTest) {
-        $msiPath = $msiTest
-
-        if (Test-Path $mstTest) {
-            $mstPath = $mstTest
-        }
-
-        Write-Host "Fundet installationsfiler på drev: $letter" -ForegroundColor Green
-        break
-    }
-}
-
-if ($msiPath) {
-
-    Write-Host "MSI: $msiPath"
-
-    if ($mstPath) {
-        Write-Host "MST: $mstPath"
-        $arguments = "/i `"$msiPath`" TRANSFORMS=`"$mstPath`" /qn /norestart"
-    }
-    else {
-        Write-Host "MST ikke fundet - fortsætter uden transform" -ForegroundColor Yellow
-        $arguments = "/i `"$msiPath`" /qn /norestart"
-    }
-
-    try {
-        Start-Process msiexec.exe -ArgumentList $arguments -Wait -NoNewWindow
-        Write-Host "ADSelfServicePlusClientSoftware Installation completed"
-    }
-    catch {
-        Write-Host "Installation fejlede, men script fortsætter: $_" -ForegroundColor Yellow
-    }
-
-}
-else {
-    Write-Host "MSI ikke fundet – springer installation over" -ForegroundColor Yellow
-}
-
-
 # 4. Registry Settings for WSUS:
 Write-Host "Registry Settings for WSUS" -ForegroundColor Green
 new-item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate"
 
 Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" -Name WUServer -Value 'http://10.209.148.16:8530'
 Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate" -Name WUStatusServer -Value 'http://10.209.148.16:8530'
+
+Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\USBSTOR" -Name Start -Value 4
 
 # 6. Firewall Settings:
 write-Host "Firewall Settings" -ForegroundColor Green
@@ -253,8 +204,5 @@ Set-ItemProperty -Path $RdpPath -Name "UserAuthentication" -Value 0
 
 # (Valgfrit, men ofte nødvendigt) Sørg for RDP er aktiveret
 Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server" -Name "fDenyTSConnections" -Value 0
-
-# 4. Registry Settings for Block USB:
-Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\USBSTOR" -Name Start -Value 4
 
 Stop-Transcript
