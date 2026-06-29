@@ -3,26 +3,15 @@ Start-Transcript -Path (Join-Path "$env:ProgramData\Microsoft\IntuneManagementEx
 
 Write-Host "Execute OSD Cloud App Install Script" -ForegroundColor Green
 
-$msiPath = "C:\OSDCache\ADSelfServicePlusClientSoftware.msi"
-$mstPath = "C:\OSDCache\ADSelfServicePlusClientSoftware.mst"
+$msi = "C:\OSDCache\ADSelfServicePlusClientSoftware.msi"
 
-if (-not (Test-Path $msiPath)) {
-    Write-Host "MSI ikke fundet i cache – springer over" -ForegroundColor Yellow
-    return
-}
-
-Write-Host "Installerer fra lokal cache: $msiPath"
-
-if (Test-Path $mstPath) {
-    $arguments = "/i `"$msiPath`" TRANSFORMS=`"$mstPath`" /qn /norestart"
+if (Test-Path $msi) {
+    Start-Process msiexec -ArgumentList "/i `"$msi`" /qn" -Wait
 }
 else {
-    $arguments = "/i `"$msiPath`" /qn /norestart"
+    Write-Host "MSI ikke fundet"
 }
 
-Start-Process msiexec.exe -ArgumentList $arguments -Wait -NoNewWindow
-
-Write-Host "Installation completed"
 
 <#$Global:Transcript = "$((Get-Date).ToString('yyyy-MM-dd-HHmmss'))-AppInstall-Script.log"
 Start-Transcript -Path (Join-Path "$env:ProgramData\Microsoft\IntuneManagementExtension\Logs\OSD\" $Global:Transcript) -ErrorAction Ignore
