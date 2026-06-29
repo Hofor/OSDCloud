@@ -54,27 +54,21 @@ else
 #write variables to console
 Write-Output $Global:MyOSDCloud
 
+# Tester app installation - kopiere ned lokalt
+Write-Host "Caching apps locally BEFORE OSDCloud..." -ForegroundColor Cyan
+
+$Global:MyOSDCloud = [ordered]@{
+    Restart = $false
+    ...
+    CopyToWindows = @{
+        "C:\OSDCache" = "OSDCloud\Files\Apps"
+    }
+}
+
 #Launch OSDCloud
 Write-Host "Starting OSDCloud" -ForegroundColor Green
 write-host "Start-OSDCloud -OSName $OSName -OSEdition $OSEdition -OSActivation $OSActivation -OSLanguage $OSLanguage"
 Start-OSDCloud -OSName $OSName -OSEdition $OSEdition -OSActivation $OSActivation -OSLanguage $OSLanguage -SkipAutopilot -ZTI
-
-# Tester app installation - kopiere ned lokalt
-Write-Host "Caching apps locally BEFORE OSDCloud..." -ForegroundColor Cyan
-
-$dest = "$env:SystemDrive\OSDCache"
-
-foreach ($letter in [char]'D'..[char]'Z') {
-
-    $source = "$letter`:\OSDCloud\Apps"
-
-    if (Test-Path $source) {
-        New-Item -Path $dest -ItemType Directory -Force | Out-Null
-        Copy-Item "$source\*" $dest -Recurse -Force
-        Write-Host "Copied apps from $letter to $dest"
-        break
-    }
-}
 
 write-host "Invoke Copy Start-OSDCloud.windeploy.specialize.ps1"
 Invoke-WebRequest 'https://raw.githubusercontent.com/Hofor/OSDCloud/refs/heads/main/SRO/SRO-FJV-OSDCloud.windeploy.specialize.ps1' -OutFile "C:\Windows\System32\OOBE\Start-OSDCloud.windeploy.specialize.ps1"
