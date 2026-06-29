@@ -29,6 +29,9 @@ $Global:MyOSDCloud = [ordered]@{
     ShutdownSetupComplete = [bool]$false
     SyncMSUpCatDriverUSB = [bool]$true
     CheckSHA1 = [bool]$true
+    CopyToWindows = @{
+        "C:\OSDCache" = "OSDCloud\Apps"
+    }
 }
 
 #Region Determine if using native driver packs, or if I want to use extracted drivers on OSDCloudUSB
