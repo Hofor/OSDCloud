@@ -58,7 +58,7 @@ Write-Output $Global:MyOSDCloud
 Write-Host "Caching apps locally BEFORE OSDCloud..." -ForegroundColor Cyan
 
 $Global:MyOSDCloud.CopyToWindows = @{
-    "C:\OSDCache" = "OSDCloud\Files\Apps"
+    "C:\OSDCache" = "OSDCloud\Apps"
 }
 
 #Launch OSDCloud
