@@ -57,12 +57,8 @@ Write-Output $Global:MyOSDCloud
 # Tester app installation - kopiere ned lokalt
 Write-Host "Caching apps locally BEFORE OSDCloud..." -ForegroundColor Cyan
 
-$Global:MyOSDCloud = [ordered]@{
-    Restart = $false
-    ...
-    CopyToWindows = @{
-        "C:\OSDCache" = "OSDCloud\Files\Apps"
-    }
+$Global:MyOSDCloud.CopyToWindows = @{
+    "C:\OSDCache" = "OSDCloud\Files\Apps"
 }
 
 #Launch OSDCloud
