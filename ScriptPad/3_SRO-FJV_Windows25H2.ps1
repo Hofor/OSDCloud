@@ -63,7 +63,8 @@ Start-OSDCloud -OSName $OSName -OSEdition $OSEdition -OSActivation $OSActivation
 #Invoke-WebRequest 'https://raw.githubusercontent.com/Hofor/OSDCloud/refs/heads/main/Apps/install_SRO_Apps.ps1' -OutFile "C:\Windows\System32\OOBE\install_SRO_Apps.ps1"
 
 write-host "Invoke Copy Start-OSDCloud.windeploy.specialize.ps1"
-Invoke-WebRequest 'https://raw.githubusercontent.com/Hofor/OSDCloud/refs/heads/main/SRO/SRO-FJV-OSDCloud.windeploy.specialize.ps1' -OutFile "C:\Windows\System32\OOBE\Start-OSDCloud.windeploy.specialize.ps1"
+#Invoke-WebRequest 'https://raw.githubusercontent.com/Hofor/OSDCloud/refs/heads/main/SRO/SRO-FJV-OSDCloud.windeploy.specialize.ps1' -OutFile "C:\Windows\System32\OOBE\Start-OSDCloud.windeploy.specialize.ps1"
+Invoke-WebRequest 'https://raw.githubusercontent.com/Hofor/OSDCloud/refs/heads/main/SRO/SRO-FJV-OSDCloud.windeploy.specialize.ps1' -OutFile "C:\Windows\System32\OOBE\OSDCloud.windeploy.specialize.ps1"
 
 write-host "Set Content In unattend.xml"
 Invoke-WebRequest 'https://raw.githubusercontent.com/Hofor/OSDCloud/refs/heads/main/SRO/SRO-FJV-unattend.xml' -OutFile "C:\Windows\Panther\unattend.xml"
