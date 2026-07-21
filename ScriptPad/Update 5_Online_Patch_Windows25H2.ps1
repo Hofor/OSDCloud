@@ -45,10 +45,10 @@ Write-Host -ForegroundColor Green "Create C:\ProgramData\OSDeploy\OSDeploy.OOBED
 $OOBEDeployJson = @'
 {
     "AddNetFX3":  {
-                      "IsPresent":  false
+                      "IsPresent":  true
                   },
     "Autopilot":  {
-                      "IsPresent":  false
+                      "IsPresent":  true
                   },
     "RemoveAppx":  [
                     "MSTeams",
