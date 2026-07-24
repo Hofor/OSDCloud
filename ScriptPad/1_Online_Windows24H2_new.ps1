@@ -68,7 +68,7 @@ Write-SectionHeader "[PreOS] MyOSDCloud Variables"
 $Global:MyOSDCloud = [ordered]@{
 
     # Deployment
-    Restart               = $true
+    Restart               = $false
     RecoveryPartition     = $true
     ClearDiskConfirm      = $false
     ShutdownSetupComplete = $false
@@ -135,6 +135,7 @@ Write-Host ($Global:MyOSDCloud | Out-String)
 #=========================================================================
 # Start OSDCloud
 #=========================================================================
+<#
 Write-SectionHeader "[OS] Start OSDCloud"
 
 $Params = @{
@@ -153,6 +154,18 @@ $Params = @{
 Write-Host ($Params | Out-String)
 
 Start-OSDCloud @Params
+#>
+
+$OSReleaseID = '24H2' #Used to Determine Driver Pack
+$OSName = 'Windows 11 24H2 x64'
+$OSEdition = 'Enterprise'
+$OSActivation = 'Volume'
+$OSLanguage = 'da-dk'
+
+#Launch OSDCloud
+Write-Host "Starting OSDCloud" -ForegroundColor Green
+write-host "Start-OSDCloud -OSName $OSName -OSEdition $OSEdition -OSActivation $OSActivation -OSLanguage $OSLanguage"
+Start-OSDCloud -OSName $OSName -OSEdition $OSEdition -OSActivation $OSActivation -OSLanguage $OSLanguage -SkipAutopilot -ZTI
 
 #=========================================================================
 # SetupComplete
@@ -188,4 +201,4 @@ Write-Host "Deployment completed. Rebooting..." -ForegroundColor Green
 
 Stop-Transcript | Out-Null
 
-wpeutil reboot
+# wpeutil reboot
