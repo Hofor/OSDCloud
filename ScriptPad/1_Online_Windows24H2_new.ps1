@@ -68,7 +68,7 @@ Write-SectionHeader "[PreOS] MyOSDCloud Variables"
 $Global:MyOSDCloud = [ordered]@{
 
     # Deployment
-    Restart               = $false
+    Restart               = $true
     RecoveryPartition     = $true
     ClearDiskConfirm      = $false
     ShutdownSetupComplete = $false
