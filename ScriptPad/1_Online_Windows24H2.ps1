@@ -48,7 +48,7 @@ $OOBEDeployJson = @'
                          "IsPresent":  true
                       },
     "Autopilot":      {
-                         "IsPresent":  true
+                         "IsPresent":  false
                       },
     "UpdateDrivers":  {
                           "IsPresent":  true
