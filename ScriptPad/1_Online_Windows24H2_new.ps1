@@ -11,9 +11,9 @@ if (-not (Test-Path 'X:\OSDCloud\Logs')) {
     New-Item -Path 'X:\OSDCloud\Logs' -ItemType Directory -Force | Out-Null
 }
 
-[Net.ServicePointManager]::SecurityProtocol =
-[Net.ServicePointManager]::SecurityProtocol -bor
-[Net.SecurityProtocolType]::Tls12
+#Transport Layer Security (TLS) 1.2
+Write-Host -ForegroundColor Green "Transport Layer Security (TLS) 1.2"
+[Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12
 
 $Transcript = "$((Get-Date).ToString('yyyy-MM-dd-HHmmss'))-Start-OSDCloudLogic.log"
 Start-Transcript -Path (Join-Path "X:\OSDCloud\Logs" $Transcript) | Out-Null
