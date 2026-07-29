@@ -68,24 +68,24 @@ Write-SectionHeader "[PreOS] MyOSDCloud Variables"
 $Global:MyOSDCloud = [ordered]@{
 
     # Deployment
-    Restart               = $true
-    RecoveryPartition     = $true
-    ClearDiskConfirm      = $false
-    ShutdownSetupComplete = $false
+    Restart               = [bool]$true
+    RecoveryPartition     = [bool]$true
+    ClearDiskConfirm      = [bool]$false
+    ShutdownSetupComplete = [bool]$false
 
     # Windows
-    OEMActivation         = $true
-    SetTimeZone           = $false
-    NetFx3                = $true
+    OEMActivation         = [bool]$true
+    SetTimeZone           = [bool]$true
+    NetFx3                = [bool]$true
 
     # Updates
-    WindowsUpdate         = $true
-    WindowsUpdateDrivers  = $true
-    WindowsDefenderUpdate = $true
+    WindowsUpdate         = [bool]$true
+    WindowsUpdateDrivers  = [bool]$true
+    WindowsDefenderUpdate = [bool]$true
     
     # Misc
-    SyncMSUpCatDriverUSB  = $false
-    CheckSHA1             = $true
+    SyncMSUpCatDriverUSB  = [bool]$false
+    CheckSHA1             = [bool]$true
 }
 
 #=========================================================================
@@ -99,10 +99,10 @@ switch -Wildcard ($Manufacturer.ToUpper()) {
 
         Write-Host "HP Device detected" -ForegroundColor Green
 
-        $Global:MyOSDCloud.HPBIOSUpdate = $true
-        $Global:MyOSDCloud.HPTPMUpdate  = $true
-        $Global:MyOSDCloud.HPIADrivers  = $true
-        $Global:MyOSDCloud.HPIAFirmware = $true
+        $Global:MyOSDCloud.HPBIOSUpdate =  [bool]$true
+        $Global:MyOSDCloud.HPTPMUpdate  =  [bool]$true
+        $Global:MyOSDCloud.HPIADrivers  =  [bool]$true
+        $Global:MyOSDCloud.HPIAFirmware =  [bool]$true
 
         # Let OSDCloud determine HP driver package
         $Global:MyOSDCloud.DriverPackName = $null
@@ -148,7 +148,7 @@ $Params = @{
     OSLicense     = "Volume"
 
     ZTI           = $true
-    SkipAutopilot = $true
+    SkipAutopilot = $false
 }
 
 Write-Host ($Params | Out-String)
@@ -161,11 +161,13 @@ $OSName = 'Windows 11 24H2 x64'
 $OSEdition = 'Enterprise'
 $OSActivation = 'Volume'
 $OSLanguage = 'da-dk'
+$ZTI = $true
+$SkipAutopilot = $false
 
 #Launch OSDCloud
 Write-Host "Starting OSDCloud" -ForegroundColor Green
 write-host "Start-OSDCloud -OSName $OSName -OSEdition $OSEdition -OSActivation $OSActivation -OSLanguage $OSLanguage"
-Start-OSDCloud -OSName $OSName -OSEdition $OSEdition -OSActivation $OSActivation -OSLanguage $OSLanguage -SkipAutopilot -ZTI
+Start-OSDCloud -OSName $OSName -OSEdition $OSEdition -OSActivation $OSActivation -OSLanguage $OSLanguage -SkipAutopilot $SkipAutopilot -ZTI $ZTI
 
 #=========================================================================
 # SetupComplete
