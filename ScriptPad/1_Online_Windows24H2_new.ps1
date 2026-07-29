@@ -148,7 +148,7 @@ $Params = @{
     OSLicense     = "Volume"
 
     ZTI           = $true
-    SkipAutopilot = $false
+    Firmware      = $true
 }
 
 Write-Host ($Params | Out-String)
@@ -167,7 +167,7 @@ $SkipAutopilot = $false
 #Launch OSDCloud
 Write-Host "Starting OSDCloud" -ForegroundColor Green
 write-host "Start-OSDCloud -OSName $OSName -OSEdition $OSEdition -OSActivation $OSActivation -OSLanguage $OSLanguage"
-Start-OSDCloud -OSName $OSName -OSEdition $OSEdition -OSActivation $OSActivation -OSLanguage $OSLanguage -SkipAutopilot $SkipAutopilot -ZTI $ZTI
+Start-OSDCloud -OSName $OSName -OSEdition $OSEdition -OSActivation $OSActivation -OSLanguage $OSLanguage -ZTI $ZTI
 
 #=========================================================================
 # SetupComplete
