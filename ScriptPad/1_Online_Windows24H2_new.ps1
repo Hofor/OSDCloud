@@ -162,7 +162,7 @@ $OSEdition = 'Enterprise'
 $OSActivation = 'Volume'
 $OSLanguage = 'da-dk'
 $ZTI = $true
-$SkipAutopilot = $false
+$Firmware = $true
 
 #Launch OSDCloud
 Write-Host "Starting OSDCloud" -ForegroundColor Green
