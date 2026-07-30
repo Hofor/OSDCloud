@@ -178,35 +178,7 @@ $OOBEDeployJson = @'
     },
     "UpdateDefender": {
         "IsPresent": true
-    },
-    "RemoveAppx": [
-        "MSTeams",
-        "MicrosoftTeams",
-        "Microsoft.BingWeather",
-        "Microsoft.BingNews",
-        "Microsoft.GamingApp",
-        "Microsoft.GetHelp",
-        "Microsoft.Getstarted",
-        "Microsoft.Messaging",
-        "Microsoft.MicrosoftOfficeHub",
-        "Microsoft.MicrosoftSolitaireCollection",
-        "Microsoft.People",
-        "Microsoft.PowerAutomateDesktop",
-        "Microsoft.StorePurchaseApp",
-        "Microsoft.Todos",
-        "microsoft.windowscommunicationsapps",
-        "Microsoft.WindowsFeedbackHub",
-        "Microsoft.WindowsMaps",
-        "Microsoft.WindowsSoundRecorder",
-        "Microsoft.Xbox.TCUI",
-        "Microsoft.XboxGameOverlay",
-        "Microsoft.XboxGamingOverlay",
-        "Microsoft.XboxIdentityProvider",
-        "Microsoft.XboxSpeechToTextOverlay",
-        "Microsoft.YourPhone",
-        "Microsoft.ZuneMusic",
-        "Microsoft.ZuneVideo"
-    ]
+    }
 }
 '@
 
@@ -222,6 +194,10 @@ $OOBEDeployJson | Out-File -FilePath "C:\ProgramData\OSDeploy\OSDeploy.OOBEDeplo
 Write-SectionHeader "[PostOS] OOBE CMD Command Line"
 #================================================
 Write-DarkGrayHost "Downloading Scripts for OOBE and specialize phase"
+
+if (-not (Test-Path 'C:\Windows\Setup\Scripts')) {
+    New-Item -Path 'C:\Windows\Setup\Scripts' -ItemType Directory -Force | Out-Null
+}
 
 $OOBEcmdTasks = @'
 @echo off
@@ -244,10 +220,6 @@ Write-Host "oobe.cmd created successfully" -ForegroundColor Green
 # SetupComplete
 #=========================================================================
 Write-SectionHeader "[PostOS] Create SetupComplete.cmd"
-
-if (-not (Test-Path 'C:\Windows\Setup\Scripts')) {
-    New-Item -Path 'C:\Windows\Setup\Scripts' -ItemType Directory -Force | Out-Null
-}
 
 $SetupCompleteCMD = @'
 @echo off
