@@ -138,6 +138,7 @@ Write-Host ($Global:MyOSDCloud | Out-String)
 Write-SectionHeader "[OS] Params and Start-OSDCloud"
 #=======================================================================
 Write-SectionHeader "[OS] Start OSDCloud"
+<#
 $Params = @{
     OSVersion   = "Windows 11"
     OSBuild     = "24H2"
@@ -149,6 +150,15 @@ $Params = @{
 }
 Write-Host ($Params | Out-String)
 Start-OSDCloud @Params
+#>
+
+$OSVersion = 'Windows 11' #Used to Determine Driver Pack
+$OSReleaseID = '24H2' #Used to Determine Driver Pack
+$OSName = 'Windows 11 24H2 x64'
+$OSEdition = 'Enterprise'
+$OSActivation = 'Volume'
+$OSLanguage = 'da-dk'
+Start-OSDCloud -OSName $OSName -OSEdition $OSEdition -OSActivation $OSActivation -OSLanguage $OSLanguage -SkipAutopilot -ZTI
 #endregion
 
 #================================================
