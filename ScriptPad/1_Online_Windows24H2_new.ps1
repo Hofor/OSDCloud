@@ -131,28 +131,23 @@ $Global:MyOSDCloud.MSCatalogFirmware = $true
 
 Write-Host ""
 Write-Host ($Global:MyOSDCloud | Out-String)
+#endregion
 
-#=========================================================================
-# Start OSDCloud
-#=========================================================================
-
+#region OS Tasks
+#=======================================================================
+Write-SectionHeader "[OS] Params and Start-OSDCloud"
+#=======================================================================
 Write-SectionHeader "[OS] Start OSDCloud"
-
 $Params = @{
-
-    OSVersion     = "Windows 11"
-    OSBuild       = "24H2"
-
-    OSEdition     = "Enterprise"
-    OSLanguage    = "da-dk"
-    OSLicense     = "Volume"
-
-    ZTI           = $true
-    Firmware      = $true
+    OSVersion   = "Windows 11"
+    OSBuild     = "24H2"
+    OSEdition   = "Enterprise"
+    OSLanguage  = "da-dk"
+    OSLicense   = "Volume"
+    ZTI         = $true
+    Firmware    = $true
 }
-
 Write-Host ($Params | Out-String)
-
 Start-OSDCloud @Params
 #endregion
 
