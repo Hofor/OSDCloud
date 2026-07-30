@@ -203,7 +203,7 @@ $OOBEcmdTasks = @'
 @echo off
 
 powershell.exe -ExecutionPolicy Bypass -Command "Invoke-Expression (Invoke-RestMethod ''https://raw.githubusercontent.com/Hofor/OSDCloud/main/scripts/psWindowsUpdate.ps1'')"
-powershell.exe -ExecutionPolicy Bypass -Command "Invoke-Expression (Invoke-RestMethod ''https://raw.githubusercontent.com/Hofor/OSDCloud/main/scripts/removeAppx.ps1'')"
+#powershell.exe -ExecutionPolicy Bypass -Command "Invoke-Expression (Invoke-RestMethod ''https://raw.githubusercontent.com/Hofor/OSDCloud/main/scripts/removeAppx.ps1'')"
 
 exit /b 0
 '@
@@ -212,8 +212,6 @@ $OOBEcmdTasks | Out-File `
     -FilePath 'C:\Windows\Setup\Scripts\oobe.cmd' `
     -Encoding ASCII `
     -Force
-
-Write-Host "oobe.cmd created successfully" -ForegroundColor Green
 #endregion
 
 #=========================================================================
@@ -224,7 +222,14 @@ Write-SectionHeader "[PostOS] Create SetupComplete.cmd"
 $SetupCompleteCMD = @'
 @echo off
 
+REM Cleanup
 powershell.exe -ExecutionPolicy Bypass -Command "Invoke-Expression (Invoke-RestMethod ''https://raw.githubusercontent.com/Hofor/OSDCloud/main/scripts/cleanupOSD.ps1'')"
+
+REM Create Autopilot folder
+mkdir C:\Windows\Provisioning\Autopilot 2>nul
+
+REM Download Autopilot profile
+powershell.exe -ExecutionPolicy Bypass -Command "Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/Hofor/OSDCloud/main/scripts/AutopilotConfiguration.json' -OutFile 'C:\Windows\Provisioning\Autopilot\AutopilotConfigurationFile.json'"
 
 exit /b 0
 '@
