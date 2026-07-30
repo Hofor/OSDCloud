@@ -198,7 +198,7 @@ $OOBEDeployJson | Out-File -FilePath "C:\ProgramData\OSDeploy\OSDeploy.OOBEDeplo
 #================================================
 Write-SectionHeader "[PostOS] OOBE CMD Command Line"
 #================================================
-Write-DarkGrayHost "Downloading Scripts for OOBE and specialize phase"
+Write-Host "Downloading Scripts for OOBE and specialize phase"
 
 if (-not (Test-Path 'C:\Windows\Setup\Scripts')) {
     New-Item -Path 'C:\Windows\Setup\Scripts' -ItemType Directory -Force | Out-Null
