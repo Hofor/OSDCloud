@@ -216,6 +216,30 @@ If (!(Test-Path "C:\ProgramData\OSDeploy")) {
 
 $OOBEDeployJson | Out-File -FilePath "C:\ProgramData\OSDeploy\OSDeploy.OOBEDeploy.json" -Encoding ascii -Force
 #endregion
+
+#region OOBE Tasks
+#================================================
+Write-SectionHeader "[PostOS] OOBE CMD Command Line"
+#================================================
+Write-DarkGrayHost "Downloading Scripts for OOBE and specialize phase"
+
+$OOBEcmdTasks = @'
+@echo off
+
+powershell.exe -ExecutionPolicy Bypass -Command "Invoke-Expression (Invoke-RestMethod ''https://raw.githubusercontent.com/Hofor/OSDCloud/main/scripts/psWindowsUpdate.ps1'')"
+powershell.exe -ExecutionPolicy Bypass -Command "Invoke-Expression (Invoke-RestMethod ''https://raw.githubusercontent.com/Hofor/OSDCloud/main/scripts/removeAppx.ps1'')"
+
+exit /b 0
+'@
+
+$OOBEcmdTasks | Out-File `
+    -FilePath 'C:\Windows\Setup\Scripts\oobe.cmd' `
+    -Encoding ASCII `
+    -Force
+
+Write-Host "oobe.cmd created successfully" -ForegroundColor Green
+#endregion
+
 #=========================================================================
 # SetupComplete
 #=========================================================================
@@ -227,8 +251,6 @@ if (-not (Test-Path 'C:\Windows\Setup\Scripts')) {
 
 $SetupCompleteCMD = @'
 @echo off
-
-#powershell.exe -ExecutionPolicy Bypass -Command "Invoke-Expression (Invoke-RestMethod ''https://raw.githubusercontent.com/Hofor/OSDCloud/main/scripts/removeAppx.ps1'')"
 
 powershell.exe -ExecutionPolicy Bypass -Command "Invoke-Expression (Invoke-RestMethod ''https://raw.githubusercontent.com/Hofor/OSDCloud/main/scripts/cleanupOSD.ps1'')"
 
