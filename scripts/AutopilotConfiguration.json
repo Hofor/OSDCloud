@@ -1,0 +1,15 @@
+{
+  "CloudAssignedDomainJoinMethod": 0,
+  "CloudAssignedDeviceName": "%SERIAL%",
+  "CloudAssignedAutopilotUpdateTimeout": 1800000,
+  "CloudAssignedForcedEnrollment": 1,
+  "Version": 2049,
+  "CloudAssignedTenantId": "46373e08-5f28-4c87-8518-bf34f4b6d77b",
+  "CloudAssignedAutopilotUpdateDisabled": 1,
+  "ZtdCorrelationId": "a8f27ac9-07ef-4204-b0a0-57411d7111ea",
+  "Comment_File": "Profile Windows 11 Corporate Build Devices",
+  "CloudAssignedOobeConfig": 1310,
+  "CloudAssignedTenantDomain": "hofordk.onmicrosoft.com",
+  "CloudAssignedAadServerData": "{\"ZeroTouchConfig\":{\"CloudAssignedTenantUpn\":\"\",\"ForcedEnrollment\":1,\"CloudAssignedTenantDomain\":\"hofordk.onmicrosoft.com\"}}",
+  "CloudAssignedLanguage": "da-DK"
+}
