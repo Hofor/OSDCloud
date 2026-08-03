@@ -68,6 +68,7 @@ Write-Host "Product: $Product" -ForegroundColor Yellow
 #=========================================================================
 Write-SectionHeader "[PreOS] Driver Pack Discovery"
 
+<#
 $DriverPackName = $null
 
 try {
@@ -84,6 +85,7 @@ try {
 catch {
     Write-Warning "No Driver Pack Match Found"
 }
+#>
 
 #=========================================================================
 # MyOSDCloud
@@ -96,18 +98,14 @@ $Global:MyOSDCloud = [ordered]@{
     RecoveryPartition     = $true
     ClearDiskConfirm      = $false
     ShutdownSetupComplete = $false
-
     OEMActivation         = $true
     NetFx3                = $true
     SetTimeZone           = $false
-
     WindowsUpdate         = $true
     WindowsUpdateDrivers  = $true
     WindowsDefenderUpdate = $true
-    MSCatalogFirmware     = $true
-
-    Product               = $Product
-
+    #MSCatalogFirmware     = $true
+    #Product               = $Product
     SyncMSUpCatDriverUSB  = $false
     CheckSHA1             = $true
 }
@@ -117,6 +115,11 @@ $Global:MyOSDCloud = [ordered]@{
 #=========================================================================
 Write-SectionHeader "[PreOS] OEM Configuration"
 
+$Global:MyOSDCloud.DriverPackName = $DriverPackName
+$Global:MyOSDCloud.DriverPackName = 'Microsoft Update Catalog'
+$Global:MyOSDCloud.MSCatalogFirmware = $true
+
+<#
 switch -Wildcard ($Manufacturer.ToUpper()) {
 
     "*HP*" {
@@ -136,7 +139,7 @@ switch -Wildcard ($Manufacturer.ToUpper()) {
             $Global:MyOSDCloud.WindowsDefenderUpdate = $true
             $Global:MyOSDCloud.MSCatalogFirmware = $true
 
-            Save-MsUpCatDriver
+            #Save-MsUpCatDriver
         }
         else {
             $Global:MyOSDCloud.DriverPackName = 'Microsoft Update Catalog'
@@ -183,6 +186,7 @@ switch -Wildcard ($Manufacturer.ToUpper()) {
         $Global:MyOSDCloud.MSCatalogFirmware = $true
     }
 }
+#>
 
 Write-Host ""
 Write-Host ($Global:MyOSDCloud | Out-String)
@@ -253,7 +257,7 @@ $OOBEcmdTasks = @'
 @echo off
 
 powershell.exe -ExecutionPolicy Bypass -Command "Invoke-Expression (Invoke-RestMethod ''https://raw.githubusercontent.com/Hofor/OSDCloud/main/scripts/psWindowsUpdate.ps1'')"
-powershell.exe -ExecutionPolicy Bypass -Command "Invoke-Expression (Invoke-RestMethod ''https://raw.githubusercontent.com/Hofor/OSDCloud/main/scripts/removeAppx.ps1'')"
+#powershell.exe -ExecutionPolicy Bypass -Command "Invoke-Expression (Invoke-RestMethod ''https://raw.githubusercontent.com/Hofor/OSDCloud/main/scripts/removeAppx.ps1'')"
 
 exit /b 0
 '@
