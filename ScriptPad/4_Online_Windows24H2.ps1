@@ -126,19 +126,17 @@ switch -Wildcard ($Manufacturer.ToUpper()) {
        if ($DriverPackName) {
             $Global:MyOSDCloud.DriverPackName = $DriverPackName
             $Global:MyOSDCloud.HPIADrivers  = $true
+            $Global:MyOSDCloud.HPIAFirmware = $true
+            $Global:MyOSDCloud.HPBIOSUpdate = $true
+            $Global:MyOSDCloud.HPTPMUpdate  = $true
         }
         else {
             $Global:MyOSDCloud.DriverPackName = 'Microsoft Update Catalog'
-            #$Global:MyOSDCloud.WindowsUpdate = $true
-            #$Global:MyOSDCloud.WindowsUpdateDrivers = $true
-            #$Global:MyOSDCloud.WindowsDefenderUpdate = $true
-            #$Global:MyOSDCloud.MSCatalogFirmware = $true
+            $Global:MyOSDCloud.WindowsUpdate = $true
+            $Global:MyOSDCloud.WindowsUpdateDrivers = $true
+            $Global:MyOSDCloud.WindowsDefenderUpdate = $true
+            $Global:MyOSDCloud.MSCatalogFirmware = $true
         }
-        
-        
-        ##$Global:MyOSDCloud.HPIAFirmware = $true
-        ##$Global:MyOSDCloud.HPBIOSUpdate = $true
-        ##$Global:MyOSDCloud.HPTPMUpdate  = $true
     }
 
     "*LENOVO*" {
@@ -196,6 +194,9 @@ Start-OSDCloud `
     -ZTI
 
 #endregion
+
+Write-Host "Kalder Hack"
+Save-MsUpCatDriver -DestinationDirectory C:\Drivers
 
 #================================================
 #  [PostOS] OOBEDeploy Configuration
