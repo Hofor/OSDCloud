@@ -1,4 +1,4 @@
-﻿Invoke-Expression -Command (Invoke-RestMethod -Uri functions.osdcloud.com)
+Invoke-Expression -Command (Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/OSDeploy/OSD/master/cloud/functions.ps1')
 
 #Variables to define the Windows OS / Edition etc to be applied during OSDCloud
 $Product = (Get-MyComputerProduct)
