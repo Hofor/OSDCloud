@@ -123,14 +123,22 @@ switch -Wildcard ($Manufacturer.ToUpper()) {
 
         Write-Host "HP Device Detected" -ForegroundColor Green
 
-        # HPIA styrer det hele
-        $Global:MyOSDCloud.DriverPackName = $null
-
-        $Global:MyOSDCloud.HPIADrivers  = $true
-        $Global:MyOSDCloud.HPIAFirmware = $true
-
-        $Global:MyOSDCloud.HPBIOSUpdate = $true
-        $Global:MyOSDCloud.HPTPMUpdate  = $true
+       if ($DriverPackName) {
+            $Global:MyOSDCloud.DriverPackName = $DriverPackName
+            $Global:MyOSDCloud.HPIADrivers  = $true
+        }
+        else {
+            $Global:MyOSDCloud.DriverPackName = 'Microsoft Update Catalog'
+            #$Global:MyOSDCloud.WindowsUpdate = $true
+            #$Global:MyOSDCloud.WindowsUpdateDrivers = $true
+            #$Global:MyOSDCloud.WindowsDefenderUpdate = $true
+            #$Global:MyOSDCloud.MSCatalogFirmware = $true
+        }
+        
+        
+        ##$Global:MyOSDCloud.HPIAFirmware = $true
+        ##$Global:MyOSDCloud.HPBIOSUpdate = $true
+        ##$Global:MyOSDCloud.HPTPMUpdate  = $true
     }
 
     "*LENOVO*" {
