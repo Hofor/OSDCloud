@@ -52,13 +52,25 @@ Invoke-Expression (Invoke-RestMethod -Uri functions.osdcloud.com)
 #=========================================================================
 Write-SectionHeader "[PreOS] Hardware Detection"
 
-$Manufacturer = (Get-CimInstance Win32_ComputerSystem).Manufacturer
-$Model        = Get-MyComputerModel
-$Product      = Get-MyComputerProduct
+$ChassisType = (Get-WmiObject -Query "SELECT * FROM Win32_SystemEnclosure").ChassisTypes
+$HyperV = Get-WmiObject -Query "SELECT * FROM Win32_ComputerSystem WHERE Manufacturer LIKE '%Microsoft Corporation%' AND Model LIKE '%Virtual Machine%'"
+$VMware = Get-WmiObject -Query "SELECT * FROM Win32_ComputerSystem WHERE Manufacturer LIKE '%VMware%' AND Model LIKE '%VMware%'"
 
-Write-Host "Manufacturer : $Manufacturer"
-Write-Host "Model        : $Model"
-Write-Host "Product      : $Product"
+If ($HyperV -or $VMware) 
+{
+    $HW         = "VM"
+    Write-Host ":Manufacturer : $HW" 
+}
+else
+{
+    $Manufacturer = (Get-CimInstance Win32_ComputerSystem).Manufacturer
+    $Model        = Get-MyComputerModel
+    $Product      = Get-MyComputerProduct
+    
+    Write-Host "Manufacturer : $Manufacturer"
+    Write-Host "Model        : $Model"
+    Write-Host "Product      : $Product"
+}
 
 #=========================================================================
 # OSDCloud Variables
