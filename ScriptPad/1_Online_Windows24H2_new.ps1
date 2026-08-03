@@ -87,7 +87,7 @@ $Global:MyOSDCloud = [ordered]@{
 
     # Windows
     OEMActivation         = [bool]$true
-    SetTimeZone           = [bool]$true
+    SetTimeZone           = [bool]$false
     NetFx3                = [bool]$true
 
     # Updates
