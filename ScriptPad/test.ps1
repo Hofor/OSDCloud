@@ -32,40 +32,51 @@ $Global:MyOSDCloud = [ordered]@{
     CheckSHA1 = [bool]$true
 }
 
-#Region Determine if using native driver packs, or if I want to use extracted drivers on OSDCloudUSB
-$Product = (Get-MyComputerProduct)
-$DriverPack = Get-OSDCloudDriverPack -Product $Product -OSVersion $OSVersion -OSReleaseID $OSReleaseID
+#=========================================================================
+# OEM Handling
+#=========================================================================
+Write-Host "[PreOS] OEM Configuration"
 
-write-host "write-host: $DriverPack"
+switch -Wildcard ($Manufacturer.ToUpper()) {
 
+    "*HP*" {
 
-if ($DriverPack){
-    $Global:MyOSDCloud.DriverPackName = $DriverPack.Name
+        Write-Host "HP Device detected" -ForegroundColor Green
+
+        $Global:MyOSDCloud.HPBIOSUpdate =  [bool]$true
+        $Global:MyOSDCloud.HPTPMUpdate  =  [bool]$true
+        $Global:MyOSDCloud.HPIADrivers  =  [bool]$true
+        $Global:MyOSDCloud.HPIAFirmware =  [bool]$true
+
+        # Let OSDCloud determine HP driver package
+        $Global:MyOSDCloud.DriverPackName = $null
+    }
+
+    "*LENOVO*" {
+
+        Write-Host "Lenovo Device detected" -ForegroundColor Green
+
+        # Let OSDCloud select Lenovo OEM driver pack
+        $Global:MyOSDCloud.DriverPackName = $null
+    }
+
+    default {
+
+        Write-Host "Using Microsoft Update Catalog drivers" -ForegroundColor Yellow
+
+        $Global:MyOSDCloud.DriverPackName   = 'Microsoft Update Catalog'
+        $Global:MyOSDCloud.MSCatalogFirmware = $true
+    }
 }
 
-write-host $Global:MyOSDCloud.DriverPackName
-
-#If Drivers are expanded on the USB Drive, disable installing a Driver Pack
-if ((Test-DISMFromOSDCloudUSB) -eq $true){
-    Write-Host "Found Driver Pack Extracted on Cloud USB Flash Drive, disabling Driver Download via OSDCloud" -ForegroundColor Green
-    $Global:MyOSDCloud.DriverPackName = "None"
-}
-else
-{
-   $Global:MyOSDCloud.DriverPackName = 'Microsoft Update Catalog'  
-}
-#endregion Driver Pack Stuff
-
-#write variables to console
-Write-Output $Global:MyOSDCloud
-
+Write-Host ($Global:MyOSDCloud | Out-String)
 #endregion
 
 #region OS Tasks
 #=======================================================================
-Write-SectionHeader "[OS] Params and Start-OSDCloud"
+Write-Output "[OS] Params and Start-OSDCloud"
 #=======================================================================
-Write-SectionHeader "[OS] Start OSDCloud"
+Write-Output "[OS] Start OSDCloud"
 $OSVersion = 'Windows 11' #Used to Determine Driver Pack
 $OSReleaseID = '24H2' #Used to Determine Driver Pack
 $OSName = 'Windows 11 24H2 x64'
