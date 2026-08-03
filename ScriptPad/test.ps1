@@ -1,4 +1,5 @@
-﻿Write-Host -ForegroundColor Green "Transport Layer Security (TLS) 1.2"
+﻿###
+Write-Host -ForegroundColor Green "Transport Layer Security (TLS) 1.2"
 [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12
 
 try {
@@ -29,8 +30,8 @@ $OSLanguage = 'da-dk'
 
 $DriverPack = Get-OSDCloudDriverPack -Product $Product -OSVersion $OSVersion -OSReleaseID $OSReleaseID
 if ($DriverPack) {
+   $DriverPackName = 'Microsoft Update Catalog'
     #$DriverPackName = $DriverPack.Name
-    $DriverPackName = 'Microsoft Update Catalog'
     Write-Host "Matched driver pack: $DriverPackName" -ForegroundColor Green
 }
 else {
@@ -52,7 +53,7 @@ $Global:MyOSDCloud = [ordered]@{
     ClearDiskConfirm = [bool]$False
     NetFx3 = [bool]$True
     ShutdownSetupComplete = [bool]$false
-    SyncMSUpCatDriverUSB = [bool]$false
+    SyncMSUpCatDriverUSB = [bool]$true
     CheckSHA1 = [bool]$true
     Product = $Product
     DriverPackName = $DriverPackName
@@ -69,32 +70,44 @@ switch -Wildcard ($Manufacturer.ToUpper()) {
     "*HP*" {
 
         Write-Host "HP Device detected" -ForegroundColor Green
-
+        
         $Global:MyOSDCloud.HPBIOSUpdate =  [bool]$true
         $Global:MyOSDCloud.HPTPMUpdate  =  [bool]$true
         $Global:MyOSDCloud.HPIADrivers  =  [bool]$true
         $Global:MyOSDCloud.HPIAFirmware =  [bool]$true
-
-        # Let OSDCloud determine HP driver package
-        $Global:MyOSDCloud.DriverPackName = $null
-        $Global:MyOSDCloud.WindowsUpdateDrivers = $true
     }
 
     "*LENOVO*" {
 
         Write-Host "Lenovo Device detected" -ForegroundColor Green
 
-        # Let OSDCloud select Lenovo OEM driver pack
-        #$Global:MyOSDCloud.DriverPackName = $null
+        # Let OSDCloud determine HP driver package
+        $Global:MyOSDCloud.DriverPackName = $null
+    
+        # Almindelige opdateringer
+        $Global:MyOSDCloud.WindowsUpdate = $true
+        $Global:MyOSDCloud.WindowsUpdateDrivers = $true
+        $Global:MyOSDCloud.WindowsDefenderUpdate = $true
+
+        # Firmware via Microsoft Catalog hvis tilgængelig
+        $Global:MyOSDCloud.MSCatalogFirmware = $true
+
     }
 
     default {
     
     Write-Host "Using Microsoft Update Catalog drivers" -ForegroundColor Yellow
 
-    #$Global:MyOSDCloud.DriverPackName = $null
-    #$Global:MyOSDCloud.WindowsUpdateDrivers = $true
-    $Global:MyOSDCloud.MSCatalogFirmware = $true
+        # Let OSDCloud determine driver package
+        $Global:MyOSDCloud.DriverPackName = $null
+    
+        # Almindelige opdateringer
+        $Global:MyOSDCloud.WindowsUpdate = $true
+        $Global:MyOSDCloud.WindowsUpdateDrivers = $true
+        $Global:MyOSDCloud.WindowsDefenderUpdate = $true
+
+        # Firmware via Microsoft Catalog hvis tilgængelig
+        $Global:MyOSDCloud.MSCatalogFirmware = $true
     }
 }
 
