@@ -1,5 +1,4 @@
-﻿#Transport Layer Security (TLS) 1.2
-Write-Host -ForegroundColor Green "Transport Layer Security (TLS) 1.2"
+﻿Write-Host -ForegroundColor Green "Transport Layer Security (TLS) 1.2"
 [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12
 
 try {
@@ -42,7 +41,7 @@ else {
 
 #Set OSDCloud Vars
 $Global:MyOSDCloud = [ordered]@{
-    Restart = [bool]$True
+    Restart = [bool]$false
     RecoveryPartition = [bool]$true
     OEMActivation = [bool]$True
     WindowsUpdate = [bool]$true
@@ -77,7 +76,8 @@ switch -Wildcard ($Manufacturer.ToUpper()) {
         $Global:MyOSDCloud.HPIAFirmware =  [bool]$true
 
         # Let OSDCloud determine HP driver package
-        #$Global:MyOSDCloud.DriverPackName = $null
+        $Global:MyOSDCloud.DriverPackName = $null
+        $Global:MyOSDCloud.WindowsUpdateDrivers = $true
     }
 
     "*LENOVO*" {
