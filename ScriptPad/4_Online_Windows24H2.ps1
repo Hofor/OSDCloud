@@ -8,9 +8,7 @@ if (-not (Test-Path 'X:\OSDCloud\Logs')) {
 }
 
 Write-Host "TLS 1.2 Enabled" -ForegroundColor Green
-[Net.ServicePointManager]::SecurityProtocol = `
-    [Net.ServicePointManager]::SecurityProtocol -bor `
-    [Net.SecurityProtocolType]::Tls12
+[Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12
 
 $Transcript = "$((Get-Date).ToString('yyyy-MM-dd-HHmmss'))-OSDCloud.log"
 Start-Transcript -Path (Join-Path "X:\OSDCloud\Logs" $Transcript) | Out-Null
@@ -66,7 +64,7 @@ Write-Host "Product: $Product" -ForegroundColor Yellow
 #=========================================================================
 # Driver Pack Detection
 #=========================================================================
-Write-SectionHeader "[PreOS] Driver Pack Discovery"
+#Write-SectionHeader "[PreOS] Driver Pack Discovery"
 
 <#
 $DriverPackName = $null
@@ -115,7 +113,7 @@ $Global:MyOSDCloud = [ordered]@{
 #=========================================================================
 Write-SectionHeader "[PreOS] OEM Configuration"
 
-$Global:MyOSDCloud.DriverPackName = $DriverPackName
+$Global:MyOSDCloud.DriverPackName = $null
 $Global:MyOSDCloud.DriverPackName = 'Microsoft Update Catalog'
 $Global:MyOSDCloud.MSCatalogFirmware = $true
 
@@ -196,15 +194,7 @@ Write-Host ($Global:MyOSDCloud | Out-String)
 # Start OSDCloud
 #=========================================================================
 Write-SectionHeader "[OS] Start OSDCloud"
-
-Start-OSDCloud `
-    -OSName $OSName `
-    -OSEdition $OSEdition `
-    -OSActivation $OSActivation `
-    -OSLanguage $OSLanguage `
-    -SkipAutopilot `
-    -ZTI
-
+Start-OSDCloud -OSName $OSName -OSEdition $OSEdition -OSActivation $OSActivation -OSLanguage $OSLanguage -SkipAutopilot -ZTI
 #endregion
 
 #Write-Host "Kalder Hack"
@@ -213,7 +203,7 @@ Start-OSDCloud `
 #================================================
 #  [PostOS] OOBEDeploy Configuration
 #================================================
-
+<#
 Write-Host -ForegroundColor Green "Create C:\ProgramData\OSDeploy\OSDeploy.OOBEDeploy.json"
 
 $OOBEDeployJson = @'
@@ -239,60 +229,40 @@ $OOBEDeployJson = @'
 If (!(Test-Path "C:\ProgramData\OSDeploy")) {
     New-Item "C:\ProgramData\OSDeploy" -ItemType Directory -Force | Out-Null
 }
-
-$OOBEDeployJson | Out-File -FilePath "C:\ProgramData\OSDeploy\OSDeploy.OOBEDeploy.json" -Encoding ascii -Force
+#>
+#$OOBEDeployJson | Out-File -FilePath "C:\ProgramData\OSDeploy\OSDeploy.OOBEDeploy.json" -Encoding ascii -Force
 #endregion
 
 #region OOBE Tasks
 #================================================
-Write-SectionHeader "[PostOS] OOBE CMD Command Line"
+Write-SectionHeader "SetupComplete"
 #================================================
-Write-Host "Downloading Scripts for OOBE and specialize phase"
+Write-Host "Downloading Scripts for SetupComplete phase"
+
+if (-not (Test-Path 'C:\Windows\Provisioning\Autopilot')) {
+    New-Item -Path 'C:\Windows\Provisioning\Autopilot' -ItemType Directory -Force | Out-Null
+}
 
 if (-not (Test-Path 'C:\Windows\Setup\Scripts')) {
     New-Item -Path 'C:\Windows\Setup\Scripts' -ItemType Directory -Force | Out-Null
 }
 
-$OOBEcmdTasks = @'
-@echo off
-
-powershell.exe -ExecutionPolicy Bypass -Command "Invoke-Expression (Invoke-RestMethod ''https://raw.githubusercontent.com/Hofor/OSDCloud/main/scripts/psWindowsUpdate.ps1'')"
-#powershell.exe -ExecutionPolicy Bypass -Command "Invoke-Expression (Invoke-RestMethod ''https://raw.githubusercontent.com/Hofor/OSDCloud/main/scripts/removeAppx.ps1'')"
-
-exit /b 0
-'@
-
-$OOBEcmdTasks | Out-File `
-    -FilePath 'C:\Windows\Setup\Scripts\oobe.cmd' `
-    -Encoding ASCII `
-    -Force
-#endregion
-
-#=========================================================================
-# SetupComplete
-#=========================================================================
-Write-SectionHeader "[PostOS] Create SetupComplete.cmd"
+Invoke-RestMethod https://raw.githubusercontent.com/Hofor/OSDCloud/main/scripts/AutopilotConfiguration.json | Out-File -FilePath 'C:\Windows\Provisioning\Autopilot\AutopilotConfigurationFile.json' -Encoding ascii -Force
+Invoke-RestMethod https://raw.githubusercontent.com/Hofor/OSDCloud/main/scripts/psWindowsUpdate.ps1 | Out-File -FilePath 'C:\Windows\Setup\scripts\psWindowsUpdate.ps1' -Encoding ascii -Force
+Invoke-RestMethod https://raw.githubusercontent.com/Hofor/OSDCloud/main/scripts/removeAppx.ps1 | Out-File -FilePath 'C:\Windows\Setup\scripts\removeAppx.ps1' -Encoding ascii -Force
+Invoke-RestMethod https://raw.githubusercontent.com/Hofor/OSDCloud/main/scripts/cleanupOSD.ps1 | Out-File -FilePath 'C:\Windows\Setup\scripts\cleanupOSD.ps1' -Encoding ascii -Force
 
 $SetupCompleteCMD = @'
 @echo off
 
-REM Cleanup
-powershell.exe -ExecutionPolicy Bypass -Command "Invoke-Expression (Invoke-RestMethod ''https://raw.githubusercontent.com/Hofor/OSDCloud/main/scripts/cleanupOSD.ps1'')"
+start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\psWindowsUpdate.ps1
+start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\removeAppx.ps1
+start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\cleanupOSD.ps1
 
-REM Create Autopilot folder
-mkdir C:\Windows\Provisioning\Autopilot 2>nul
-
-REM Download Autopilot profile
-powershell.exe -ExecutionPolicy Bypass -Command "Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/Hofor/OSDCloud/main/scripts/AutopilotConfiguration.json' -OutFile 'C:\Windows\Provisioning\Autopilot\AutopilotConfigurationFile.json'"
-
-exit /b 0
+exit 
 '@
 
-$SetupCompleteCMD | Out-File `
-    -FilePath 'C:\Windows\Setup\Scripts\SetupComplete.cmd' `
-    -Encoding ASCII `
-    -Force
-
+$SetupCompleteCMD | Out-File -FilePath 'C:\Windows\Setup\Scripts\SetupComplete.cmd' -Encoding ASCII -Force
 Write-Host "SetupComplete.cmd created successfully" -ForegroundColor Green
 
 #=========================================================================
