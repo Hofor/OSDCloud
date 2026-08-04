@@ -26,7 +26,7 @@ $Global:MyOSDCloud = [ordered]@{
     ClearDiskConfirm = [bool]$False
     NetFx3 = [bool]$True
     ShutdownSetupComplete = [bool]$false
-    SyncMSUpCatDriverUSB = [bool]$false
+    SyncMSUpCatDriverUSB = [bool]$true
     CheckSHA1 = [bool]$true
 }
 
