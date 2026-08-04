@@ -2,7 +2,7 @@
 $Global:Transcript = "$((Get-Date).ToString('yyyy-MM-dd-HHmmss'))-WindowsUpdate-Script.log"
 Start-Transcript -Path (Join-Path "$env:ProgramData\Microsoft\IntuneManagementExtension\Logs\OSD\" $Global:Transcript) -ErrorAction Ignore
 
-Write-Host "Execute OSD Cloud Cleanup Script" -ForegroundColor Green
+Write-Host "Execute OSD Cloud WindowsUpdate Script" -ForegroundColor Green
 
 #=================================================
 #   oobeCloud Settings
