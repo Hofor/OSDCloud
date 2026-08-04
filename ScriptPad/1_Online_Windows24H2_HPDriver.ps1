@@ -30,14 +30,39 @@ $Global:MyOSDCloud = [ordered]@{
     CheckSHA1 = [bool]$true
 }
 
+#Used to Determine Driver Pack
+$DriverPack = Get-OSDCloudDriverPack -Product $Product -OSVersion $OSVersion -OSReleaseID $OSReleaseID
 
-$Global:MyOSDCloud.DriverPackName = 'Microsoft Update Catalog'  
+if ($DriverPack){
+    $Global:MyOSDCloud.DriverPackName = $DriverPack.Name
+}
+else
+{
+   $Global:MyOSDCloud.DriverPackName = 'Microsoft Update Catalog'
+}
+
+  write-host "DriverPackName: $Global:MyOSDCloud.DriverPackName"
+
+<#If Drivers are expanded on the USB Drive, disable installing a Driver Pack
+if (Test-DISMFromOSDCloudUSB -eq $true){
+    Write-Host "Found Driver Pack Extracted on Cloud USB Flash Drive, disabling Driver Download via OSDCloud" -ForegroundColor Green
+    if ($Global:MyOSDCloud.SyncMSUpCatDriverUSB -eq $true){
+        write-host "Setting DriverPackName to 'Microsoft Update Catalog'"
+        $Global:MyOSDCloud.DriverPackName = 'Microsoft Update Catalog'
+    }
+    else {
+        write-host "Setting DriverPackName to 'None'"
+        $Global:MyOSDCloud.DriverPackName = "None"
+    }
+}
+#>  
 
 #Launch OSDCloud
 Write-Host "Starting OSDCloud" -ForegroundColor Green
 write-host "Start-OSDCloud -OSName $OSName -OSEdition $OSEdition -OSActivation $OSActivation -OSLanguage $OSLanguage"
 Start-OSDCloud -OSName $OSName -OSEdition $OSEdition -OSActivation $OSActivation -OSLanguage $OSLanguage -SkipAutopilot -ZTI
 
+<#
 #================================================
 #  [PostOS] OOBEDeploy Configuration
 #================================================
@@ -94,7 +119,7 @@ If (!(Test-Path "C:\ProgramData\OSDeploy")) {
     New-Item "C:\ProgramData\OSDeploy" -ItemType Directory -Force | Out-Null
 }
 $OOBEDeployJson | Out-File -FilePath "C:\ProgramData\OSDeploy\OSDeploy.OOBEDeploy.json" -Encoding ascii -Force
-
+#>
 #================================================
 #  [PostOS] SetupComplete CMD Command Line
 #================================================
