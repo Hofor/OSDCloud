@@ -1,10 +1,8 @@
-﻿[CmdletBinding()]
-param()
-#region Initialize
-
 #Start the Transcript
-$Transcript = "$((Get-Date).ToString('yyyy-MM-dd-HHmmss'))-OSDCloud.log"
-$null = Start-Transcript -Path (Join-Path "$env:SystemRoot\Temp" $Transcript) -ErrorAction Ignore
+$Global:Transcript = "$((Get-Date).ToString('yyyy-MM-dd-HHmmss'))-WindowsUpdate-Script.log"
+Start-Transcript -Path (Join-Path "$env:ProgramData\Microsoft\IntuneManagementExtension\Logs\OSD\" $Global:Transcript) -ErrorAction Ignore
+
+Write-Host "Execute OSD Cloud Cleanup Script" -ForegroundColor Green
 
 #=================================================
 #   oobeCloud Settings
@@ -99,18 +97,9 @@ function Step-oobeUpdateWindows {
 #endregion
 
 # Execute functions
-#Step-KeyboardLanguage
 Step-oobeExecutionPolicy
-#Step-oobePackageManagement
 Step-oobeTrustPSGallery
-#Step-oobeSetDisplay
-#Step-oobeSetRegionLanguage
-#Step-oobeSetDateTime
-#Step-oobeRegisterAutopilot
-#Step-oobeRemoveAppxPackage
-#Step-oobeAddCapability
 Step-oobeUpdateDrivers
 Step-oobeUpdateWindows
-#Invoke-Webhook
-#Step-oobeRestartComputer
-#Step-oobeStopComputer
+
+Stop-Transcript
