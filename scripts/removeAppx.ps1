@@ -1,4 +1,8 @@
-﻿Write-Host "Removing unwanted AppX packages..." -ForegroundColor Cyan
+#Start the Transcript
+$Global:Transcript = "$((Get-Date).ToString('yyyy-MM-dd-HHmmss'))-removeAppx-Script.log"
+Start-Transcript -Path (Join-Path "$env:ProgramData\Microsoft\IntuneManagementExtension\Logs\OSD\" $Global:Transcript) -ErrorAction Ignore
+ 
+#Write-Host "Removing unwanted AppX packages..." -ForegroundColor Cyan
 
 $AppxPackages = @(
     "Microsoft.BingWeather",
@@ -33,7 +37,7 @@ $AppxPackages = @(
 
 foreach ($Package in $AppxPackages) {
 
-    Write-Host "Removing $Package"
+    #Write-Host "Removing $Package"
 
     Get-AppxPackage -AllUsers -Name $Package -ErrorAction SilentlyContinue |
         Remove-AppxPackage -AllUsers -ErrorAction SilentlyContinue
@@ -42,3 +46,6 @@ foreach ($Package in $AppxPackages) {
         Where-Object DisplayName -eq $Package |
         Remove-AppxProvisionedPackage -Online -ErrorAction SilentlyContinue
 }
+
+
+Stop-Transcript
