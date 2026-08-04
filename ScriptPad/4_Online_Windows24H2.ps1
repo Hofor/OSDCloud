@@ -1,4 +1,16 @@
-$ErrorActionPreference = 'Stop'
+#=========================================================================
+# Helper Functions
+#=========================================================================
+function Write-SectionHeader {
+    param([string]$Message)
+
+    Write-Host ""
+    Write-Host "=========================================================================" -ForegroundColor DarkGray
+    Write-Host "$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss') $Message" -ForegroundColor Cyan
+    Write-Host "=========================================================================" -ForegroundColor DarkGray
+}
+
+Write-SectionHeader "[Start] OSD Cloud"
 
 #=========================================================================
 # Logging
@@ -14,32 +26,10 @@ $Transcript = "$((Get-Date).ToString('yyyy-MM-dd-HHmmss'))-OSDCloud.log"
 Start-Transcript -Path (Join-Path "X:\OSDCloud\Logs" $Transcript) | Out-Null
 
 #=========================================================================
-# Helper Functions
-#=========================================================================
-function Write-SectionHeader {
-    param([string]$Message)
-
-    Write-Host ""
-    Write-Host "=========================================================================" -ForegroundColor DarkGray
-    Write-Host "$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss') $Message" -ForegroundColor Cyan
-    Write-Host "=========================================================================" -ForegroundColor DarkGray
-}
-
-#=========================================================================
 # OSD Module
 #=========================================================================
 Write-SectionHeader "[PreOS] OSD Module"
-
-try {
-    Install-Module OSD -Force -SkipPublisherCheck
-}
-catch {
-    Write-Warning "OSD Module install skipped"
-}
-
-Import-Module OSD -Force
-
-Invoke-Expression (Invoke-RestMethod 'https://raw.githubusercontent.com/OSDeploy/OSD/master/cloud/functions.ps1')
+Invoke-Expression -Command (Invoke-RestMethod -Uri functions.osdcloud.com)
 
 #=========================================================================
 # Device Information
@@ -196,9 +186,6 @@ Write-Host ($Global:MyOSDCloud | Out-String)
 Write-SectionHeader "[OS] Start OSDCloud"
 Start-OSDCloud -OSName $OSName -OSEdition $OSEdition -OSActivation $OSActivation -OSLanguage $OSLanguage -SkipAutopilot -ZTI
 #endregion
-
-#Write-Host "Kalder Hack"
-#Save-MsUpCatDriver -DestinationDirectory C:\Drivers
 
 #================================================
 #  [PostOS] OOBEDeploy Configuration
