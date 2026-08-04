@@ -1,8 +1,6 @@
 #=========================================================================
 # OSDCloud Deployment
 #=========================================================================
-#Requires -RunAsAdministrator
-$ErrorActionPreference = 'Stop'
 
 #=========================================================================
 # Logging
@@ -34,43 +32,26 @@ function Write-SectionHeader {
 # OSD Module
 #=========================================================================
 Write-SectionHeader "[PreOS] Import OSD Module"
-
-try {
-    Install-Module OSD -Force -SkipPublisherCheck
-}
-catch {
-    Write-Warning "OSD Module already installed or installation failed"
-}
-
-Import-Module OSD -Force
-
-Write-Host "Loading OSDCloud functions..." -ForegroundColor Green
-Invoke-Expression (Invoke-RestMethod -Uri functions.osdcloud.com)
+Invoke-Expression -Command (Invoke-RestMethod -Uri functions.osdcloud.com)
 
 #=========================================================================
 # Device Information
 #=========================================================================
 Write-SectionHeader "[PreOS] Hardware Detection"
 
-$ChassisType = (Get-WmiObject -Query "SELECT * FROM Win32_SystemEnclosure").ChassisTypes
-$HyperV = Get-WmiObject -Query "SELECT * FROM Win32_ComputerSystem WHERE Manufacturer LIKE '%Microsoft Corporation%' AND Model LIKE '%Virtual Machine%'"
-$VMware = Get-WmiObject -Query "SELECT * FROM Win32_ComputerSystem WHERE Manufacturer LIKE '%VMware%' AND Model LIKE '%VMware%'"
+$Manufacturer = (Get-CimInstance -Class:Win32_ComputerSystem).Manufacturer
+$Model = (Get-CimInstance -Class:Win32_ComputerSystem).Model
 
-If ($HyperV -or $VMware) 
-{
-    $HW         = "VM"
-    Write-Host ":Manufacturer : $HW" 
-}
-else
-{
-    $Manufacturer = (Get-CimInstance Win32_ComputerSystem).Manufacturer
-    $Model        = Get-MyComputerModel
-    $Product      = Get-MyComputerProduct
-    
-    Write-Host "Manufacturer : $Manufacturer"
-    Write-Host "Model        : $Model"
-    Write-Host "Product      : $Product"
-}
+#Variables to define the Windows OS / Edition etc to be applied during OSDCloud
+$Product = (Get-MyComputerProduct)
+$Model = (Get-MyComputerModel)
+$Manufacturer = (Get-CimInstance -ClassName Win32_ComputerSystem).Manufacturer
+$OSVersion = 'Windows 11' #Used to Determine Driver Pack
+$OSReleaseID = '24H2' #Used to Determine Driver Pack
+$OSName = 'Windows 11 24H2 x64'
+$OSEdition = 'Enterprise'
+$OSActivation = 'Volume'
+$OSLanguage = 'da-dk'
 
 #=========================================================================
 # OSDCloud Variables
@@ -104,13 +85,12 @@ $Global:MyOSDCloud = [ordered]@{
 # OEM Handling
 #=========================================================================
 Write-SectionHeader "[PreOS] OEM Configuration"
-<#
+
 switch -Wildcard ($Manufacturer.ToUpper()) {
 
     "*HP*" {
 
         Write-Host "HP Device detected" -ForegroundColor Green
-
         $Global:MyOSDCloud.HPBIOSUpdate =  [bool]$true
         $Global:MyOSDCloud.HPTPMUpdate  =  [bool]$true
         $Global:MyOSDCloud.HPIADrivers  =  [bool]$true
@@ -131,15 +111,10 @@ switch -Wildcard ($Manufacturer.ToUpper()) {
     default {
 
         Write-Host "Using Microsoft Update Catalog drivers" -ForegroundColor Yellow
-
         $Global:MyOSDCloud.DriverPackName   = 'Microsoft Update Catalog'
         $Global:MyOSDCloud.MSCatalogFirmware = $true
     }
 }
-#>
-
-$Global:MyOSDCloud.DriverPackName   = 'Microsoft Update Catalog'
-$Global:MyOSDCloud.MSCatalogFirmware = $true
 
 Write-Host ""
 Write-Host ($Global:MyOSDCloud | Out-String)
@@ -150,19 +125,6 @@ Write-Host ($Global:MyOSDCloud | Out-String)
 Write-SectionHeader "[OS] Params and Start-OSDCloud"
 #=======================================================================
 Write-SectionHeader "[OS] Start OSDCloud"
-<#
-$Params = @{
-    OSVersion   = "Windows 11"
-    OSBuild     = "24H2"
-    OSEdition   = "Enterprise"
-    OSLanguage  = "da-dk"
-    OSLicense   = "Volume"
-    ZTI         = $true
-    Firmware    = $true
-}
-Write-Host ($Params | Out-String)
-Start-OSDCloud @Params
-#>
 
 $OSVersion = 'Windows 11' #Used to Determine Driver Pack
 $OSReleaseID = '24H2' #Used to Determine Driver Pack
