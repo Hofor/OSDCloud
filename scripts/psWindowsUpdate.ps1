@@ -21,7 +21,7 @@ $Global:oobeCloud = @{
 function Step-oobeTrustPSGallery {
     [CmdletBinding()]
     param ()
-    if ($env:UserName -eq 'defaultuser0') {
+   # if ($env:UserName -eq 'defaultuser0') {
         $PSRepository = Get-PSRepository -Name PSGallery
         if ($PSRepository)
         {
@@ -31,24 +31,24 @@ function Step-oobeTrustPSGallery {
                 Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
             }
         }
-    }
+    #}
 }
 
 function Step-oobeExecutionPolicy {
     [CmdletBinding()]
     param ()
-    if ($env:UserName -eq 'defaultuser0') {
+   # if ($env:UserName -eq 'defaultuser0') {
         if ((Get-ExecutionPolicy) -ne 'RemoteSigned') {
             Write-Host -ForegroundColor Cyan 'Set-ExecutionPolicy RemoteSigned'
             Set-ExecutionPolicy RemoteSigned -Force
         }
-    }
+   # }
 }
 
 function Step-oobeUpdateDrivers {
     [CmdletBinding()]
     param ()
-    if (($env:UserName -eq 'defaultuser0') -and ($Global:oobeCloud.oobeUpdateDrivers -eq $true)) {
+   # if (($env:UserName -eq 'defaultuser0') -and ($Global:oobeCloud.oobeUpdateDrivers -eq $true)) {
         Write-Host -ForegroundColor Cyan 'Updating Windows Drivers'
         if (!(Get-Module PSWindowsUpdate -ListAvailable -ErrorAction Ignore)) {
             try {
@@ -62,12 +62,12 @@ function Step-oobeUpdateDrivers {
         if (Get-Module PSWindowsUpdate -ListAvailable -ErrorAction Ignore) {
             Start-Process PowerShell.exe -ArgumentList "-Command Install-WindowsUpdate -UpdateType Driver -AcceptAll -IgnoreReboot" -Wait
         }
-    }
+  #  }
 }
 function Step-oobeUpdateWindows {
     [CmdletBinding()]
     param ()
-    if (($env:UserName -eq 'defaultuser0') -and ($Global:oobeCloud.oobeUpdateWindows -eq $true)) {
+   # if (($env:UserName -eq 'defaultuser0') -and ($Global:oobeCloud.oobeUpdateWindows -eq $true)) {
         Write-Host -ForegroundColor Cyan 'Updating Windows'
         if (!(Get-Module PSWindowsUpdate -ListAvailable)) {
             try {
@@ -86,7 +86,7 @@ function Step-oobeUpdateWindows {
             #Write-Host -ForegroundColor DarkCyan 'Install-WindowsUpdate -MicrosoftUpdate -AcceptAll -IgnoreReboot'
             Start-Process PowerShell.exe -ArgumentList "-Command Install-WindowsUpdate -MicrosoftUpdate -AcceptAll -IgnoreReboot -NotTitle 'Preview', 'Feature update', 'Windows 11, version 25H2','Windows 11, version 26H2'" -Wait
         }
-    }
+  #  }
 }
 
 #endregion
