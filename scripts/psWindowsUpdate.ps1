@@ -1,6 +1,10 @@
+[CmdletBinding()]
+param()
+#region Initialize
+
 #Start the Transcript
-$Global:Transcript = "$((Get-Date).ToString('yyyy-MM-dd-HHmmss'))-WindowsUpdate-Script.log"
-Start-Transcript -Path (Join-Path "X:\OSDCloud\Logs\" $Global:Transcript) -ErrorAction Ignore
+$Transcript = "$((Get-Date).ToString('yyyy-MM-dd-HHmmss'))-WindowsUpdate.log"
+$null = Start-Transcript -Path (Join-Path "C:\OSDCloud\Logs\" $Transcript) -ErrorAction Ignore
 
 Write-Host "Execute OSD Cloud WindowsUpdate Script" -ForegroundColor Green
 
