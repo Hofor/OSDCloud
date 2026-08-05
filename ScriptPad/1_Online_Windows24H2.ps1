@@ -225,16 +225,16 @@ If (!(Test-Path "C:\ProgramData\OSDeploy")) {
 Write-SectionHeader "[PostOS] OOBE CMD Command Line"
 #================================================
 Write-Host "Downloading Scripts for OOBE and specialize phase"
-
+<#
 if (-not (Test-Path 'C:\Windows\Provisioning\Autopilot')) {
     New-Item -Path 'C:\Windows\Provisioning\Autopilot' -ItemType Directory -Force | Out-Null
 }
-
+#>
 if (-not (Test-Path 'C:\Windows\Setup\Scripts')) {
     New-Item -Path 'C:\Windows\Setup\Scripts' -ItemType Directory -Force | Out-Null
 }
 
-Invoke-RestMethod https://raw.githubusercontent.com/Hofor/OSDCloud/main/scripts/AutopilotConfiguration.json | Out-File -FilePath 'C:\Windows\Provisioning\Autopilot\AutopilotConfigurationFile.json' -Encoding ascii -Force
+#Invoke-RestMethod https://raw.githubusercontent.com/Hofor/OSDCloud/main/scripts/AutopilotConfiguration.json | Out-File -FilePath 'C:\Windows\Provisioning\Autopilot\AutopilotConfigurationFile.json' -Encoding ascii -Force
 Invoke-RestMethod https://raw.githubusercontent.com/Hofor/OSDCloud/main/scripts/psWindowsUpdate.ps1 | Out-File -FilePath 'C:\Windows\Setup\scripts\psWindowsUpdate.ps1' -Encoding ascii -Force
 Invoke-RestMethod https://raw.githubusercontent.com/Hofor/OSDCloud/main/scripts/removeAppx.ps1 | Out-File -FilePath 'C:\Windows\Setup\scripts\removeAppx.ps1' -Encoding ascii -Force
 
