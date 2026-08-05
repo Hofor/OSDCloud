@@ -1,6 +1,6 @@
 #Start the Transcript
 $Global:Transcript = "$((Get-Date).ToString('yyyy-MM-dd-HHmmss'))-removeAppx-Script.log"
-Start-Transcript -Path (Join-Path "$env:ProgramData\Microsoft\IntuneManagementExtension\Logs\OSD\" $Global:Transcript) -ErrorAction Ignore
+Start-Transcript -Path (Join-Path "X:\OSDCloud\Logs\" $Global:Transcript) -ErrorAction Ignore
  
 Write-Host "Removing unwanted AppX packages..." -ForegroundColor Cyan
 
