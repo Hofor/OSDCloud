@@ -1,7 +1,11 @@
+[CmdletBinding()]
+param()
+#region Initialize
+
 #Start the Transcript
-$Global:Transcript = "$((Get-Date).ToString('yyyy-MM-dd-HHmmss'))-removeAppx-Script.log"
-Start-Transcript -Path (Join-Path "X:\OSDCloud\Logs\" $Global:Transcript) -ErrorAction Ignore
- 
+$Transcript = "$((Get-Date).ToString('yyyy-MM-dd-HHmmss'))-removeAppx.log"
+$null = Start-Transcript -Path (Join-Path "C:\OSDCloud\Logs\" $Transcript) -ErrorAction Ignore
+
 Write-Host "Removing unwanted AppX packages..." -ForegroundColor Cyan
 
 $AppxPackages = @(
