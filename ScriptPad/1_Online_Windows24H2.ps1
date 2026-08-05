@@ -92,8 +92,8 @@ $Global:MyOSDCloud = [ordered]@{
     WindowsUpdate         = $true
     WindowsUpdateDrivers  = $true
     WindowsDefenderUpdate = $true
-    #MSCatalogFirmware     = $true
-    #Product               = $Product
+    #MSCatalogFirmware    = $true
+    #Product              = $Product
     SyncMSUpCatDriverUSB  = $false
     CheckSHA1             = $true
 }
@@ -222,9 +222,9 @@ If (!(Test-Path "C:\ProgramData\OSDeploy")) {
 
 #region OOBE Tasks
 #================================================
-Write-SectionHeader "SetupComplete"
+Write-SectionHeader "[PostOS] OOBE CMD Command Line"
 #================================================
-Write-Host "Downloading Scripts for SetupComplete phase"
+Write-Host "Downloading Scripts for OOBE and specialize phase"
 
 if (-not (Test-Path 'C:\Windows\Provisioning\Autopilot')) {
     New-Item -Path 'C:\Windows\Provisioning\Autopilot' -ItemType Directory -Force | Out-Null
@@ -237,13 +237,28 @@ if (-not (Test-Path 'C:\Windows\Setup\Scripts')) {
 Invoke-RestMethod https://raw.githubusercontent.com/Hofor/OSDCloud/main/scripts/AutopilotConfiguration.json | Out-File -FilePath 'C:\Windows\Provisioning\Autopilot\AutopilotConfigurationFile.json' -Encoding ascii -Force
 Invoke-RestMethod https://raw.githubusercontent.com/Hofor/OSDCloud/main/scripts/psWindowsUpdate.ps1 | Out-File -FilePath 'C:\Windows\Setup\scripts\psWindowsUpdate.ps1' -Encoding ascii -Force
 Invoke-RestMethod https://raw.githubusercontent.com/Hofor/OSDCloud/main/scripts/removeAppx.ps1 | Out-File -FilePath 'C:\Windows\Setup\scripts\removeAppx.ps1' -Encoding ascii -Force
+
+$OOBEcmdTasks = @'
+@echo off
+
+start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\psWindowsUpdate.ps1
+start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\removeAppx.ps1
+
+exit 
+'@
+$OOBEcmdTasks | Out-File -FilePath 'C:\Windows\Setup\scripts\oobe.cmd' -Encoding ascii -Force
+#endregion
+
+#================================================
+Write-SectionHeader "SetupComplete"
+#================================================
+Write-Host "Downloading Scripts for SetupComplete phase"
+
 Invoke-RestMethod https://raw.githubusercontent.com/Hofor/OSDCloud/main/scripts/cleanupOSD.ps1 | Out-File -FilePath 'C:\Windows\Setup\scripts\cleanupOSD.ps1' -Encoding ascii -Force
 
 $SetupCompleteCMD = @'
 @echo off
 
-start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\psWindowsUpdate.ps1
-start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\removeAppx.ps1
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\cleanupOSD.ps1
 
 exit 
