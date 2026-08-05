@@ -35,7 +35,11 @@ $AppxPackages = @(
     "Clipchamp.Clipchamp",
     "MicrosoftCorporationII.QuickAssist",
     "Microsoft.OutlookForWindows",
-    "Microsoft.Windows.DevHome"
+    "Microsoft.WindowsAlarms",
+    "Microsoft.BingSearch",
+    "Microsoft.Edge.GameAssist",
+     "microsoft.windowscommunicationsapps",
+     "Microsoft.Windows.DevHome"
 
 )
 
