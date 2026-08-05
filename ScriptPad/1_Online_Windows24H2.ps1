@@ -236,7 +236,7 @@ if (-not (Test-Path 'C:\Windows\Setup\Scripts')) {
 
 #Invoke-RestMethod https://raw.githubusercontent.com/Hofor/OSDCloud/main/scripts/AutopilotConfiguration.json | Out-File -FilePath 'C:\Windows\Provisioning\Autopilot\AutopilotConfigurationFile.json' -Encoding ascii -Force
 Invoke-RestMethod https://raw.githubusercontent.com/Hofor/OSDCloud/main/scripts/psWindowsUpdate.ps1 | Out-File -FilePath 'C:\Windows\Setup\scripts\psWindowsUpdate.ps1' -Encoding ascii -Force
-#Invoke-RestMethod https://raw.githubusercontent.com/Hofor/OSDCloud/main/scripts/removeAppx.ps1 | Out-File -FilePath 'C:\Windows\Setup\scripts\removeAppx.ps1' -Encoding ascii -Force
+Invoke-RestMethod https://raw.githubusercontent.com/Hofor/OSDCloud/main/scripts/removeAppx.ps1 | Out-File -FilePath 'C:\Windows\Setup\scripts\removeAppx.ps1' -Encoding ascii -Force
 
 $OOBEcmdTasks = @'
 @echo off
