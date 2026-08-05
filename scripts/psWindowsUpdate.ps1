@@ -4,9 +4,11 @@ param()
 
 #Start the Transcript
 $Transcript = "$((Get-Date).ToString('yyyy-MM-dd-HHmmss'))-WindowsUpdate.log"
-$null = Start-Transcript -Path (Join-Path "C:\OSDCloud\Logs\" $Transcript) -ErrorAction Ignore
+Start-Transcript -Path (Join-Path "C:\OSDCloud\Logs\" $Transcript) -ErrorAction Ignore
 
 Write-Host "Execute OSD Cloud WindowsUpdate Script" -ForegroundColor Green
+
+Write-Host "UserState: $env:UserName"
 
 #=================================================
 #   oobeCloud Settings
