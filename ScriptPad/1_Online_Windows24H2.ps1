@@ -190,7 +190,7 @@ Start-OSDCloud -OSName $OSName -OSEdition $OSEdition -OSActivation $OSActivation
 #================================================
 #  [PostOS] OOBEDeploy Configuration
 #================================================
-<#
+
 Write-Host -ForegroundColor Green "Create C:\ProgramData\OSDeploy\OSDeploy.OOBEDeploy.json"
 
 $OOBEDeployJson = @'
@@ -216,8 +216,8 @@ $OOBEDeployJson = @'
 If (!(Test-Path "C:\ProgramData\OSDeploy")) {
     New-Item "C:\ProgramData\OSDeploy" -ItemType Directory -Force | Out-Null
 }
-#>
-#$OOBEDeployJson | Out-File -FilePath "C:\ProgramData\OSDeploy\OSDeploy.OOBEDeploy.json" -Encoding ascii -Force
+
+$OOBEDeployJson | Out-File -FilePath "C:\ProgramData\OSDeploy\OSDeploy.OOBEDeploy.json" -Encoding ascii -Force
 #endregion
 
 #region OOBE Tasks
@@ -235,13 +235,12 @@ if (-not (Test-Path 'C:\Windows\Setup\Scripts')) {
 }
 
 #Invoke-RestMethod https://raw.githubusercontent.com/Hofor/OSDCloud/main/scripts/AutopilotConfiguration.json | Out-File -FilePath 'C:\Windows\Provisioning\Autopilot\AutopilotConfigurationFile.json' -Encoding ascii -Force
-Invoke-RestMethod https://raw.githubusercontent.com/Hofor/OSDCloud/main/scripts/psWindowsUpdate.ps1 | Out-File -FilePath 'C:\Windows\Setup\scripts\psWindowsUpdate.ps1' -Encoding ascii -Force
 Invoke-RestMethod https://raw.githubusercontent.com/Hofor/OSDCloud/main/scripts/removeAppx.ps1 | Out-File -FilePath 'C:\Windows\Setup\scripts\removeAppx.ps1' -Encoding ascii -Force
 
 $OOBEcmdTasks = @'
 @echo off
 
-start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\psWindowsUpdate.ps1
+REM start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\psWindowsUpdate.ps1
 start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\removeAppx.ps1
 
 exit 
@@ -253,21 +252,23 @@ Write-Host "oobe.cmd created successfully" -ForegroundColor Green
 #================================================
 Write-SectionHeader "SetupComplete"
 #================================================
+<#
 Write-Host "Downloading Scripts for SetupComplete phase"
 
 Invoke-RestMethod https://raw.githubusercontent.com/Hofor/OSDCloud/main/scripts/cleanupOSD.ps1 | Out-File -FilePath 'C:\Windows\Setup\scripts\cleanupOSD.ps1' -Encoding ascii -Force
+Invoke-RestMethod https://raw.githubusercontent.com/Hofor/OSDCloud/main/scripts/psWindowsUpdate.ps1 | Out-File -FilePath 'C:\Windows\Setup\scripts\psWindowsUpdate.ps1' -Encoding ascii -Force
 
 $SetupCompleteCMD = @'
 @echo off
-
-start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\cleanupOSD.ps1
+start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\psWindowsUpdate.ps1
+REM start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\cleanupOSD.ps1
 
 exit 
 '@
 
 $SetupCompleteCMD | Out-File -FilePath 'C:\Windows\Setup\Scripts\SetupComplete.cmd' -Encoding ASCII -Force
 Write-Host "SetupComplete.cmd created successfully" -ForegroundColor Green
-
+#>
 #=========================================================================
 # Finish
 #=========================================================================
