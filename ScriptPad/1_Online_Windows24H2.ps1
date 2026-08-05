@@ -50,30 +50,7 @@ $OSLanguage   = 'da-dk'
 Write-Host "Manufacturer: $Manufacturer" -ForegroundColor Yellow
 Write-Host "Model: $Model" -ForegroundColor Yellow
 Write-Host "Product: $Product" -ForegroundColor Yellow
-
-#=========================================================================
-# Driver Pack Detection
-#=========================================================================
-#Write-SectionHeader "[PreOS] Driver Pack Discovery"
-
-<#
-$DriverPackName = $null
-
-try {
-    $DriverPack = Get-OSDCloudDriverPack `
-        -Product $Product `
-        -OSVersion $OSVersion `
-        -OSReleaseID $OSReleaseID
-
-    if ($DriverPack) {
-        $DriverPackName = $DriverPack.Name
-        Write-Host "Matched Driver Pack: $DriverPackName" -ForegroundColor Green
-    }
-}
-catch {
-    Write-Warning "No Driver Pack Match Found"
-}
-#>
+#endregion
 
 #=========================================================================
 # MyOSDCloud
@@ -97,6 +74,7 @@ $Global:MyOSDCloud = [ordered]@{
     SyncMSUpCatDriverUSB  = $false
     CheckSHA1             = $true
 }
+#endregion
 
 #=========================================================================
 # OEM Handling
@@ -106,75 +84,6 @@ Write-SectionHeader "[PreOS] OEM Configuration"
 $Global:MyOSDCloud.DriverPackName = $null
 $Global:MyOSDCloud.DriverPackName = 'Microsoft Update Catalog'
 $Global:MyOSDCloud.MSCatalogFirmware = $true
-
-<#
-switch -Wildcard ($Manufacturer.ToUpper()) {
-
-    "*HP*" {
-
-        Write-Host "HP Device Detected" -ForegroundColor Green
-
-       if ($DriverPackName) {
-            #$Global:MyOSDCloud.DriverPackName = $DriverPackName
-            #$Global:MyOSDCloud.HPIADrivers  = $true
-            #$Global:MyOSDCloud.HPIAFirmware = $true
-            #$Global:MyOSDCloud.HPBIOSUpdate = $true
-            #$Global:MyOSDCloud.HPTPMUpdate  = $true
-            
-            $Global:MyOSDCloud.DriverPackName = 'Microsoft Update Catalog'
-            $Global:MyOSDCloud.WindowsUpdate = $true
-            $Global:MyOSDCloud.WindowsUpdateDrivers = $true
-            $Global:MyOSDCloud.WindowsDefenderUpdate = $true
-            $Global:MyOSDCloud.MSCatalogFirmware = $true
-
-            #Save-MsUpCatDriver
-        }
-        else {
-            $Global:MyOSDCloud.DriverPackName = 'Microsoft Update Catalog'
-            $Global:MyOSDCloud.WindowsUpdate = $true
-            $Global:MyOSDCloud.WindowsUpdateDrivers = $true
-            $Global:MyOSDCloud.WindowsDefenderUpdate = $true
-            $Global:MyOSDCloud.MSCatalogFirmware = $true
-        }
-    }
-
-    "*LENOVO*" {
-
-        Write-Host "Lenovo Device Detected" -ForegroundColor Green
-
-        if ($DriverPackName) {
-            $Global:MyOSDCloud.DriverPackName = $DriverPackName
-        }
-        else {
-            $Global:MyOSDCloud.DriverPackName = 'Microsoft Update Catalog'
-        }
-
-        $Global:MyOSDCloud.MSCatalogFirmware = $true
-    }
-
-    "*DELL*" {
-
-        Write-Host "Dell Device Detected" -ForegroundColor Green
-
-        if ($DriverPackName) {
-            $Global:MyOSDCloud.DriverPackName = $DriverPackName
-        }
-        else {
-            $Global:MyOSDCloud.DriverPackName = 'Microsoft Update Catalog'
-        }
-
-        $Global:MyOSDCloud.MSCatalogFirmware = $true
-    }
-
-    default {
-
-        Write-Host "Unknown Manufacturer - Using Microsoft Update Catalog" -ForegroundColor Yellow
-
-        $Global:MyOSDCloud.DriverPackName = 'Microsoft Update Catalog'
-        $Global:MyOSDCloud.MSCatalogFirmware = $true
-    }
-}
-#>
 
 Write-Host ""
 Write-Host ($Global:MyOSDCloud | Out-String)
@@ -190,7 +99,7 @@ Start-OSDCloud -OSName $OSName -OSEdition $OSEdition -OSActivation $OSActivation
 #================================================
 #  [PostOS] OOBEDeploy Configuration
 #================================================
-
+write-SectionHeader "[PostOS] OOBEDeploy Configuration"
 Write-Host -ForegroundColor Green "Create C:\ProgramData\OSDeploy\OSDeploy.OOBEDeploy.json"
 
 $OOBEDeployJson = @'
@@ -209,7 +118,35 @@ $OOBEDeployJson = @'
     },
     "UpdateDefender": {
         "IsPresent": true
-    }
+    },
+    "RemoveAppx":  [
+                    "MSTeams",
+                    "MicrosoftTeams",
+                    "Microsoft.BingWeather",
+                    "Microsoft.BingNews",
+                    "Microsoft.GamingApp",
+                    "Microsoft.GetHelp",
+                    "Microsoft.Getstarted",
+                    "Microsoft.Messaging",
+                    "Microsoft.MicrosoftOfficeHub",
+                    "Microsoft.MicrosoftSolitaireCollection",
+                    "Microsoft.People",
+                    "Microsoft.PowerAutomateDesktop",
+                    "Microsoft.StorePurchaseApp",
+                    "Microsoft.Todos",
+                    "microsoft.windowscommunicationsapps",
+                    "Microsoft.WindowsFeedbackHub",
+                    "Microsoft.WindowsMaps",
+                    "Microsoft.WindowsSoundRecorder",
+                    "Microsoft.Xbox.TCUI",
+                    "Microsoft.XboxGameOverlay",
+                    "Microsoft.XboxGamingOverlay",
+                    "Microsoft.XboxIdentityProvider",
+                    "Microsoft.XboxSpeechToTextOverlay",
+                    "Microsoft.YourPhone",
+                    "Microsoft.ZuneMusic",
+                    "Microsoft.ZuneVideo"
+                   ]
 }
 '@
 
@@ -225,16 +162,16 @@ $OOBEDeployJson | Out-File -FilePath "C:\ProgramData\OSDeploy\OSDeploy.OOBEDeplo
 Write-SectionHeader "[PostOS] OOBE CMD Command Line"
 #================================================
 Write-Host "Downloading Scripts for OOBE and specialize phase"
-<#
+
 if (-not (Test-Path 'C:\Windows\Provisioning\Autopilot')) {
     New-Item -Path 'C:\Windows\Provisioning\Autopilot' -ItemType Directory -Force | Out-Null
 }
-#>
+
 if (-not (Test-Path 'C:\Windows\Setup\Scripts')) {
     New-Item -Path 'C:\Windows\Setup\Scripts' -ItemType Directory -Force | Out-Null
 }
 
-#Invoke-RestMethod https://raw.githubusercontent.com/Hofor/OSDCloud/main/scripts/AutopilotConfiguration.json | Out-File -FilePath 'C:\Windows\Provisioning\Autopilot\AutopilotConfigurationFile.json' -Encoding ascii -Force
+Invoke-RestMethod https://raw.githubusercontent.com/Hofor/OSDCloud/main/scripts/AutopilotConfiguration.json | Out-File -FilePath 'C:\Windows\Provisioning\Autopilot\AutopilotConfigurationFile.json' -Encoding ascii -Force
 Invoke-RestMethod https://raw.githubusercontent.com/Hofor/OSDCloud/main/scripts/removeAppx.ps1 | Out-File -FilePath 'C:\Windows\Setup\scripts\removeAppx.ps1' -Encoding ascii -Force
 
 $OOBEcmdTasks = @'
@@ -249,26 +186,25 @@ $OOBEcmdTasks | Out-File -FilePath 'C:\Windows\Setup\scripts\oobe.cmd' -Encoding
 Write-Host "oobe.cmd created successfully" -ForegroundColor Green
 #endregion
 
-#================================================
-Write-SectionHeader "SetupComplete"
-#================================================
-<#
-Write-Host "Downloading Scripts for SetupComplete phase"
+#region Collecting the logs
+#=======================================================================	
+Write-SectionHeader "Moving OSDCloud Logs to IntuneManagementExtension\Logs\OSD"	
+#=======================================================================
+$LogFolder = "C:\ProgramData\Microsoft\IntuneManagementExtension\Logs\OSD"
 
-Invoke-RestMethod https://raw.githubusercontent.com/Hofor/OSDCloud/main/scripts/cleanupOSD.ps1 | Out-File -FilePath 'C:\Windows\Setup\scripts\cleanupOSD.ps1' -Encoding ascii -Force
-Invoke-RestMethod https://raw.githubusercontent.com/Hofor/OSDCloud/main/scripts/psWindowsUpdate.ps1 | Out-File -FilePath 'C:\Windows\Setup\scripts\psWindowsUpdate.ps1' -Encoding ascii -Force
+if (-NOT (Test-Path $LogFolder)) {	
+    New-Item -Path $LogFolder -ItemType Directory -Force -ErrorAction Stop | Out-Null	
+}	
 
-$SetupCompleteCMD = @'
-@echo off
-start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\psWindowsUpdate.ps1
-REM start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scripts\cleanupOSD.ps1
+if (Test-Path 'C:\OSDCloud\Logs') {
+    Get-ChildItem 'C:\OSDCloud\Logs' | Copy-Item -Destination $LogFolder -Force
+}
 
-exit 
-'@
+if (Test-Path 'X:\OSDCloud\Logs') {
+    Get-ChildItem 'X:\OSDCloud\Logs' | Copy-Item -Destination $LogFolder -Force
+}
+#endregion
 
-$SetupCompleteCMD | Out-File -FilePath 'C:\Windows\Setup\Scripts\SetupComplete.cmd' -Encoding ASCII -Force
-Write-Host "SetupComplete.cmd created successfully" -ForegroundColor Green
-#>
 #=========================================================================
 # Finish
 #=========================================================================
@@ -276,5 +212,3 @@ Write-Host ""
 Write-Host "Deployment completed. Rebooting..." -ForegroundColor Green
 
 Stop-Transcript | Out-Null
-
-# wpeutil reboot
