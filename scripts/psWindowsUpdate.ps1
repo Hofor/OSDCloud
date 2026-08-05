@@ -8,19 +8,8 @@ Write-Host "Execute OSD Cloud WindowsUpdate Script" -ForegroundColor Green
 #   oobeCloud Settings
 #=================================================
 $Global:oobeCloud = @{
-    #oobeSetDisplay = $true
-    #oobeSetRegionLanguage = $true
-    #oobeSetDateTime = $true
-    #oobeRegisterAutopilot = $false
-    #oobeRegisterAutopilotCommand = 'Get-WindowsAutopilotInfo -Online -GroupTag Demo -Assign'
-    #oobeRemoveAppxPackage = $true
-    #oobeRemoveAppxPackageName = 'CommunicationsApps','OfficeHub','People','Skype','Solitaire','Xbox','ZuneMusic','ZuneVideo'
-    #oobeAddCapability = $true
-    #oobeAddCapabilityName = 'GroupPolicy','ServerManager','VolumeActivation'
     oobeUpdateDrivers = $true
     oobeUpdateWindows = $true
-    #oobeRestartComputer = $true
-    #oobeStopComputer = $false
 }
 
 function Step-oobeTrustPSGallery {
