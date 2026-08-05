@@ -247,6 +247,7 @@ start /wait powershell.exe -NoL -ExecutionPolicy Bypass -F C:\Windows\Setup\Scri
 exit 
 '@
 $OOBEcmdTasks | Out-File -FilePath 'C:\Windows\Setup\scripts\oobe.cmd' -Encoding ascii -Force
+Write-Host "oobe.cmd created successfully" -ForegroundColor Green
 #endregion
 
 #================================================
