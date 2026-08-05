@@ -4,7 +4,7 @@ param()
 
 #Start the Transcript
 $Transcript = "$((Get-Date).ToString('yyyy-MM-dd-HHmmss'))-removeAppx.log"
-$null = Start-Transcript -Path (Join-Path "C:\OSDCloud\Logs\" $Transcript) -ErrorAction Ignore
+Start-Transcript -Path (Join-Path "C:\OSDCloud\Logs\" $Transcript) -ErrorAction Ignore
 
 Write-Host "Removing unwanted AppX packages..." -ForegroundColor Cyan
 
